@@ -140,7 +140,9 @@ function renderMemos() {
     actions.append(editBtn, deleteBtn);
 
     card.append(title, content, date, actions);
-
+card.addEventListener('pointerdown', () => {
+  bringToFront(card, memo);
+});
     memoBoard.appendChild(card);
 
     setupMemoDrag(card, memo);
@@ -363,9 +365,7 @@ function setupMemoDrag(card, memo) {
     originalX = memo.x ?? 15;
     originalY = memo.y ?? 15;
 
-    card.style.zIndex = Date.now();
-
-    memo.zIndex = Date.now();
+bringToFront(card, memo);
 
     card.setPointerCapture(e.pointerId);
 

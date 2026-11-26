@@ -583,10 +583,12 @@ function updateAdminUI() {
 
 /* ==========================================
    랜덤 물건 목록
+   현재 홈페이지에서는 목록을 표시하지 않음
 ========================================== */
 
 async function loadItems() {
-
+  return;
+}
   const list = document.getElementById('item-list');
 
   list.innerHTML = '<p>물건 목록을 불러오는 중...</p>';

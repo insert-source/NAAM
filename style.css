@@ -831,3 +831,68 @@ body {
   }
 
 }
+/* ==================================
+   이모지 스티커
+================================== */
+
+.sticker {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  min-width: 45px;
+  min-height: 45px;
+  padding: 5px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  line-height: 1;
+  filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.12));
+}
+
+.sticker:active {
+  cursor: grabbing;
+}
+
+.sticker-controls {
+  position: absolute;
+  top: -27px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  gap: 3px;
+  white-space: nowrap;
+  z-index: 10000;
+}
+
+.sticker:hover .sticker-controls {
+  display: flex;
+}
+
+.sticker-controls button {
+  width: 23px;
+  height: 23px;
+  padding: 0;
+  border-radius: 6px;
+  background: #fffaf3;
+  color: #766456;
+  border: 1px solid #eadccd;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sticker-controls button:hover {
+  background: #f2dfce;
+}
+
+
+/* 모바일에서도 조작 버튼 표시 */
+
+@media (max-width: 680px) {
+
+  .sticker-controls {
+    display: flex;
+  }
+
+}

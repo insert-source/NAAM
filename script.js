@@ -1106,7 +1106,11 @@ function renderStickers() {
     el.style.left = sticker.x + 'px';
     el.style.top = sticker.y + 'px';
     el.style.fontSize = sticker.size + 'px';
-    el.style.zIndex = sticker.zIndex || 1000;
+ el.style.setProperty(
+  'z-index',
+  String(Number(sticker.zIndex) || 1),
+  'important'
+);
     el.style.transform = `rotate(${sticker.rotation || 0}deg)`;
 
     memoBoard.appendChild(el);

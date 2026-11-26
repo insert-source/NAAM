@@ -1240,14 +1240,20 @@ renderStickers();
 
 function bringToFront(element, item) {
 
-  const memoIndexes = memos.map(m => Number(m.zIndex) || 0);
-  const stickerIndexes = stickers.map(s => Number(s.zIndex) || 0);
+  const allItems = [
+    ...memos,
+    ...stickers
+  ];
 
-  const highest = Math.max(0, ...memoIndexes, ...stickerIndexes);
+  const highest = Math.max(
+    0,
+    ...allItems.map(item => Number(item.zIndex) || 0)
+  );
 
   const nextIndex = highest + 1;
 
   item.zIndex = nextIndex;
+
   element.style.zIndex = nextIndex;
 
   saveMemos();

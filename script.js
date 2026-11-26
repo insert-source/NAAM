@@ -1067,7 +1067,11 @@ function addSticker(emoji) {
     y: 80 + Math.random() * 100,
     size: 48,
     rotation: 0,
-    zIndex: ++stickerZIndex
+  zIndex: Math.max(
+  0,
+  ...memos.map(m => Number(m.zIndex) || 0),
+  ...stickers.map(s => Number(s.zIndex) || 0)
+) + 1
   };
 
   stickers.push(sticker);

@@ -1044,3 +1044,188 @@ document.getElementById('close-emoji-picker')
 emojiSearch.addEventListener('input', () => {
   renderEmojiList(emojiSearch.value.trim());
 });
+
+/* ==========================================
+   스티커 저장 및 표시
+========================================== */
+
+let stickers = JSON.parse(localStorage.getItem('stickers')) || [];
+
+let stickerZIndex = 1000;
+
+function saveStickers() {
+  localStorage.setItem('stickers', JSON.stringify(stickers));
+}
+
+
+/* 스티커 추가 */
+
+function addSticker(emoji) {
+
+  const sticker = {
+    id: Date.now() + Math.random(),
+    emoji: emoji,
+    x: 80 + Math.random() * 100,
+    y: 80 + Math.random() * 100,
+    size: 48,
+    rotation: 0,
+    zIndex: ++stickerZIndex
+  };
+
+  stickers.push(sticker);
+
+  saveStickers();
+  renderStickers();
+}
+
+
+/* 스티커 표시 */
+
+function renderStickers() {
+
+  document.querySelectorAll('.sticker').forEach(el => el.remove());
+
+  stickers.forEach(sticker => {
+
+    const el = document.createElement('div');
+
+    el.className = 'sticker';
+    el.dataset.id = sticker.id;
+    el.textContent = sticker.emoji;
+
+    el.style.left = sticker.x + 'px';
+    el.style.top = sticker.y + 'px';
+    el.style.fontSize = sticker.size + 'px';
+    el.style.zIndex = sticker.zIndex || 1000;
+    el.style.transform = `rotate(${sticker.rotation || 0}deg)`;
+
+    memoBoard.appendChild(el);
+
+    setupStickerDrag(el, sticker);
+    setupStickerControls(el, sticker);
+
+  });
+
+}
+
+
+/* 스티커 이동 */
+
+function setupStickerDrag(el, sticker) {
+
+  let startX = 0;
+  let startY = 0;
+  let originalX = 0;
+  let originalY = 0;
+  let dragging = false;
+
+  el.addEventListener('pointerdown', e => {
+
+    if (e.button !== 0) return;
+
+    if (e.target.closest('.sticker-controls')) return;
+
+    dragging = true;
+
+    startX = e.clientX;
+    startY = e.clientY;
+
+    originalX = sticker.x;
+    originalY = sticker.y;
+
+    sticker.zIndex = ++stickerZIndex;
+    el.style.zIndex = sticker.zIndex;
+
+    el.setPointerCapture(e.pointerId);
+
+  });
+
+  el.addEventListener('pointermove', e => {
+
+    if (!dragging) return;
+
+    sticker.x = Math.max(0, originalX + e.clientX - startX);
+    sticker.y = Math.max(0, originalY + e.clientY - startY);
+
+    el.style.left = sticker.x + 'px';
+    el.style.top = sticker.y + 'px';
+
+  });
+
+  function stopDragging() {
+
+    if (!dragging) return;
+
+    dragging = false;
+    saveStickers();
+
+  }
+
+  el.addEventListener('pointerup', stopDragging);
+  el.addEventListener('pointercancel', stopDragging);
+
+}
+
+
+/* 스티커 조작 버튼 */
+
+function setupStickerControls(el, sticker) {
+
+  const controls = document.createElement('div');
+  controls.className = 'sticker-controls';
+
+  const smaller = document.createElement('button');
+  smaller.textContent = '−';
+  smaller.title = '작게';
+
+  const bigger = document.createElement('button');
+  bigger.textContent = '+';
+  bigger.title = '크게';
+
+  const rotate = document.createElement('button');
+  rotate.textContent = '↻';
+  rotate.title = '회전';
+
+  const remove = document.createElement('button');
+  remove.textContent = '×';
+  remove.title = '삭제';
+
+  smaller.addEventListener('click', e => {
+    e.stopPropagation();
+    sticker.size = Math.max(20, sticker.size - 8);
+    el.style.fontSize = sticker.size + 'px';
+    saveStickers();
+  });
+
+  bigger.addEventListener('click', e => {
+    e.stopPropagation();
+    sticker.size = Math.min(150, sticker.size + 8);
+    el.style.fontSize = sticker.size + 'px';
+    saveStickers();
+  });
+
+  rotate.addEventListener('click', e => {
+    e.stopPropagation();
+    sticker.rotation = (sticker.rotation + 15) % 360;
+    el.style.transform = `rotate(${sticker.rotation}deg)`;
+    saveStickers();
+  });
+
+  remove.addEventListener('click', e => {
+    e.stopPropagation();
+
+    stickers = stickers.filter(s => s.id !== sticker.id);
+
+    saveStickers();
+    renderStickers();
+  });
+
+  controls.append(smaller, bigger, rotate, remove);
+  el.appendChild(controls);
+
+}
+
+
+/* 스티커 초기 표시 */
+
+renderStickers();

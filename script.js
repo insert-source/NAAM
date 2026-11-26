@@ -145,14 +145,12 @@ card.addEventListener('pointerdown', () => {
 });
     memoBoard.appendChild(card);
 
-    setupMemoDrag(card, memo);
-
+       setupMemoDrag(card, memo);
     setupMemoResize(card, memo);
-
   });
 
+  renderStickers();
 }
-
 
 /* ==========================================
    메모 추가

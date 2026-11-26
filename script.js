@@ -558,58 +558,28 @@ document.getElementById('login-submit-btn')
 
   });
 
-
-/* 로그인 상태 확인 */
-
-async function checkLogin() {
-
-  const { data } = await supabaseClient.auth.getSession();
-
-  currentUser = data.session?.user || null;
-
-  if (currentUser?.id !== ADMIN_ID) {
-
-    currentUser = null;
-
-  }
-
-  updateAdminUI();
-
-}
-
-
 function updateAdminUI() {
 
   const isAdmin = currentUser?.id === ADMIN_ID;
 
-  document.getElementById('admin-controls')
-    .classList.toggle('hidden', !isAdmin);
+  const adminControls = document.getElementById('admin-controls');
+  const clearHistoryBtn = document.getElementById('clear-history-btn');
+  const adminLoginBtn = document.getElementById('admin-login-btn');
 
-  document.getElementById('clear-history-btn')
-    .classList.toggle('hidden', !isAdmin);
-
-  document.getElementById('admin-login-btn').textContent =
-    isAdmin ? '관리자 로그아웃' : '관리자 로그인';
-
-}
-
-
-/* 로그인 상태 변경 감지 */
-
-supabaseClient.auth.onAuthStateChange((event, session) => {
-
-  currentUser = session?.user || null;
-
-  if (currentUser?.id !== ADMIN_ID) {
-
-    currentUser = null;
-
+  if (adminControls) {
+    adminControls.classList.toggle('hidden', !isAdmin);
   }
 
-  updateAdminUI();
+  if (clearHistoryBtn) {
+    clearHistoryBtn.classList.toggle('hidden', !isAdmin);
+  }
 
-});
+  if (adminLoginBtn) {
+    adminLoginBtn.textContent =
+      isAdmin ? '관리자 로그아웃' : '관리자 로그인';
+  }
 
+}
 
 /* ==========================================
    랜덤 물건 목록

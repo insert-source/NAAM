@@ -1255,14 +1255,18 @@ function bringToFront(element, item) {
 
   const highest = Math.max(
     0,
-    ...allItems.map(item => Number(item.zIndex) || 0)
+    ...allItems.map(obj => Number(obj.zIndex) || 0)
   );
 
   const nextIndex = highest + 1;
 
   item.zIndex = nextIndex;
 
-  element.style.zIndex = nextIndex;
+  element.style.setProperty(
+    'z-index',
+    String(nextIndex),
+    'important'
+  );
 
   saveMemos();
   saveStickers();

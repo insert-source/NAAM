@@ -979,3 +979,68 @@ async function initializeSite() {
 
 
 initializeSite();
+/* ==========================================
+   이모지 스티커 선택 기능
+========================================== */
+
+const emojiPicker = document.getElementById('emoji-picker');
+const emojiList = document.getElementById('emoji-list');
+const emojiSearch = document.getElementById('emoji-search');
+
+const emojiCategories = {
+  얼굴: '😀 😃 😄 😁 😆 😅 😂 🤣 🥲 🥹 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😗 😙 😚 😋 😛 😜 🤪 😝 🤑 🤗 🤭 🫢 🫣 🤫 🤔 🫡 🤐 🤨 😐 😑 😶 🫥 😏 😒 🙄 😬 😮‍💨 🤥 😌 😔 😪 🤤 😴 😷 🤒 🤕 🤢 🤮 🤧 🥵 🥶 🥴 😵 🤯 🤠 🥳 🥸 😎 🤓 🧐 😕 🫤 😟 🙁 ☹️ 😮 😯 😲 😳 🥺 😦 😧 😨 😰 😥 😢 😭 😱 😖 😣 😞 😓 😩 😫 🥱 😤 😡 😠 🤬 😈 👿 💀 ☠️ 💩 🤡 👻 👽 👾 🤖 🎃',
+  동물: '🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐻‍❄️ 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🐝 🪱 🦋 🐌 🐞 🐜 🪰 🪲 🪳 🦟 🦗 🕷️ 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🦈 🐊 🦭 🦦 🦥 🐘 🦣 🦛 🦏 🐪 🐫 🦒 🦘 🦬 🐃 🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🦮 🐈 🐓 🦃 🦚 🦜 🦢 🦩 🕊️ 🐇 🦝 🦨 🦡 🦔 🐾',
+  식물: '🌵 🎄 🌲 🌳 🌴 🪵 🌱 🌿 ☘️ 🍀 🎍 🪴 🎋 🍃 🍂 🍁 🍄 🪺 🪻 🌷 🪷 🌹 🥀 🌺 🌸 🌼 🌻 🌞',
+  음식: '🍇 🍈 🍉 🍊 🍋 🍌 🍍 🥭 🍎 🍏 🍐 🍑 🍒 🍓 🫐 🥝 🍅 🫒 🥥 🥑 🍆 🥔 🥕 🌽 🌶️ 🫑 🥒 🥬 🥦 🧄 🧅 🥜 🫘 🌰 🍞 🥐 🥖 🫓 🥨 🥯 🥞 🧇 🧀 🍖 🍗 🥩 🥓 🍔 🍟 🍕 🌭 🥪 🌮 🌯 🫔 🥙 🧆 🍳 🥚 🧈 🥞 🧂 🍿 🍱 🍘 🍙 🍚 🍛 🍜 🍝 🍠 🍢 🍣 🍤 🍥 🥮 🍡 🥟 🥠 🥡 🦪 🍦 🍧 🍨 🍩 🍪 🎂 🍰 🧁 🥧 🍫 🍬 🍭 🍮 🍯 🍼 🥛 ☕ 🍵 🧃 🥤 🧋 🍶 🍺 🍷 🥂 🍹 🧉',
+  사물: '⌚ 📱 💻 🖥️ 🖨️ ⌨️ 🖱️ 💽 💾 💿 📷 📸 📹 🎥 📺 📻 🎙️ 🎧 🎤 📢 📣 🔔 🔕 🕯️ 💡 🔦 🏮 📔 📕 📖 📗 📘 📙 📚 📓 📒 📃 📜 📰 🗞️ 🔖 🏷️ 💰 💴 💵 💶 💷 💳 💎 ⚖️ 🧸 🪆 🪄 🎀 🎁 🎈 🎉 🎊 🎏 🎐 🪩 🪅 🪆 🖼️ 🪞 🛍️',
+  기호: '❤️ 🩷 🧡 💛 💚 💙 🩵 💜 🤎 🖤 🩶 🤍 💔 ❣️💕 💞 💓 💗 💖 💘 💝 💟 ☮️ ✝️ ☯️ ✡️ 🕉️ ☸️ 🔯 🪯 ☪️ ☦️ 🛐 ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ♐ ♑ ♒ ♓ 🆔 ⚛️ 🉑 ☢️ ☣️ 📴 📳 🈶 🈚 🈸 🈺 🈷️ ✴️ 🆚 💯 🔥 ✨ ⭐ 🌟 💫 ☀️ 🌙 ☁️ 🌈 ❄️ ⚡ 💧 💦 🌊 🎵 🎶 💭 💤',
+  활동: '⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🥏 🎱 🪀 🏓 🏸 🏒 🏑 🥍 🏏 🥅 ⛳ 🪁 🏹 🎣 🤿 🥊 🥋 🎽 🛹 🛼 🛷 ⛸️ 🥌 🎿 ⛷️ 🏂 🏋️ 🤸 🤼 🤽 🤾 🧗 🚴 🚵 🏇 🧘 🏄 🏊',
+  교통: '🚗 🚕 🚙 🚌 🚎 🏎️ 🚓 🚑 🚒 🚐 🛻 🚚 🚛 🚜 🏍️ 🛵 🚲 🛴 🛹 🚨 🚔 🚍 🚘 🚖 🚡 🚠 🚟 🚃 🚋 🚞 🚝 🚄 🚅 🚈 🚂 ✈️ 🛫 🛬 🛩️ 🚀 🛸 🚁 🛶 ⛵ 🚤 🛥️ 🛳️ 🚢 ⚓'
+};
+
+let allEmojis = [];
+
+Object.values(emojiCategories).forEach(category => {
+  allEmojis.push(...category.split(' '));
+});
+
+allEmojis = [...new Set(allEmojis)];
+
+function renderEmojiList(search = '') {
+  emojiList.innerHTML = '';
+
+  const filtered = allEmojis.filter(emoji => {
+    return !search || emoji.includes(search);
+  });
+
+  filtered.forEach(emoji => {
+    const button = document.createElement('button');
+    button.className = 'emoji-choice';
+    button.textContent = emoji;
+    button.type = 'button';
+
+    button.addEventListener('click', () => {
+      addSticker(emoji);
+      emojiPicker.classList.add('hidden');
+      emojiSearch.value = '';
+      renderEmojiList();
+    });
+
+    emojiList.appendChild(button);
+  });
+}
+
+document.getElementById('add-sticker-btn')
+  .addEventListener('click', () => {
+    emojiPicker.classList.toggle('hidden');
+    renderEmojiList();
+  });
+
+document.getElementById('close-emoji-picker')
+  .addEventListener('click', () => {
+    emojiPicker.classList.add('hidden');
+  });
+
+emojiSearch.addEventListener('input', () => {
+  renderEmojiList(emojiSearch.value.trim());
+});

@@ -765,8 +765,11 @@ async function deleteItem(name) {
    랜덤 뽑기
 ========================================== */
 
-document.getElementById('draw-btn')
-  .addEventListener('click', drawPrize);
+const drawButton = document.getElementById('draw-btn');
+
+if (drawButton) {
+  drawButton.addEventListener('click', drawPrize);
+}
 
 
 async function drawPrize() {

@@ -1133,8 +1133,7 @@ function setupStickerDrag(el, sticker) {
     originalX = sticker.x;
     originalY = sticker.y;
 
-    sticker.zIndex = ++stickerZIndex;
-    el.style.zIndex = sticker.zIndex;
+  bringToFront(el, sticker);
 
     el.setPointerCapture(e.pointerId);
 

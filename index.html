@@ -37,7 +37,37 @@
       </button>
     </div>
 
-    <div id="memo-board" class="memo-board"></div>
+  <!-- 메모 도구 -->
+<div class="memo-toolbar">
+
+  <button id="add-sticker-btn" class="sticker-tool-btn">
+    ✨ 스티커 붙이기
+  </button>
+
+  <span>이모지를 골라 메모판을 꾸며보세요!</span>
+
+</div>
+
+<!-- 이모지 선택창 -->
+<div id="emoji-picker" class="emoji-picker hidden">
+
+  <div class="emoji-picker-header">
+    <h3>스티커 선택</h3>
+    <button id="close-emoji-picker">×</button>
+  </div>
+
+  <input
+    type="text"
+    id="emoji-search"
+    placeholder="이모지 검색..."
+  >
+
+  <div id="emoji-list" class="emoji-list"></div>
+
+</div>
+
+<!-- 메모 보드 -->
+<div id="memo-board" class="memo-board"></div>
 
   </section>
 

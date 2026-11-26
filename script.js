@@ -77,7 +77,7 @@ function saveMemos() {
 function renderMemos() {
 
   memoBoard.innerHTML = '';
-
+memoBoard.style.position = 'relative';
   memos.forEach(memo => {
 
     const card = document.createElement('div');

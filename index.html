@@ -9,72 +9,80 @@
 
 <body>
 
-  <header class="header">
-    <div class="logo">MEMO & RANDOM</div>
+<header class="header">
+  <div class="logo">MEMO & RANDOM</div>
 
-    <nav class="tabs">
-      <button class="tab active" data-tab="memo">MEMO</button>
-      <button class="tab" data-tab="random">RANDOM</button>
-    </nav>
-  </header>
+  <nav class="tabs">
+    <button class="tab active" data-tab="memo">MEMO</button>
+    <button class="tab" data-tab="random">RANDOM</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- 메모장 -->
+  <section id="memo-page" class="page active">
+
+    <div class="page-heading">
+      <div>
+        <h1>My Memo</h1>
+        <p>생각나는 것들을 자유롭게 붙여보세요.</p>
+      </div>
+
+      <button id="add-memo-btn" class="primary-btn">
+        + 메모 추가
+      </button>
+    </div>
+
+    <div id="memo-board" class="memo-board"></div>
+
+  </section>
 
 
-  <main>
+  <!-- 랜덤 뽑기 -->
+  <section id="random-page" class="page">
 
-    <!-- 메모장 -->
+    <div class="page-heading">
+      <div>
+        <h1>Random Draw</h1>
+        <p>오늘은 어떤 물건이 나올까요?</p>
+      </div>
+    </div>
 
-    <section id="memo-page" class="page active">
+    <div class="random-container">
 
-      <div class="page-heading">
-        <div>
-          <h1>My Memo</h1>
-          <p>생각나는 것들을 자유롭게 붙여보세요.</p>
+      <div class="draw-box">
+
+        <div class="draw-result" id="draw-result">
+          <span>?</span>
         </div>
 
-        <button id="add-memo-btn" class="primary-btn">
-          + 메모 추가
+        <button id="draw-btn" class="primary-btn draw-btn">
+          물건 뽑기
         </button>
+
+        <p id="draw-description">
+          버튼을 눌러 랜덤으로 물건을 뽑아보세요.
+        </p>
+
+        <p id="draw-status"></p>
+
       </div>
 
-      <div id="memo-board" class="memo-board">
-      </div>
 
-    </section>
+      <!-- 관리자 영역 -->
+      <div class="item-manager">
 
-
-    <!-- 랜덤 뽑기 -->
-
-    <section id="random-page" class="page">
-
-      <div class="page-heading">
-        <div>
-          <h1>Random Draw</h1>
-          <p>오늘은 어떤 물건이 나올까요?</p>
-        </div>
-      </div>
-
-      <div class="random-container">
-
-        <div class="draw-box">
-
-          <div class="draw-result" id="draw-result">
-            <span>?</span>
-          </div>
-
-          <button id="draw-btn" class="primary-btn draw-btn">
-            물건 뽑기
-          </button>
-
-          <p id="draw-description">
-            버튼을 눌러 랜덤으로 물건을 뽑아보세요.
-          </p>
-
-        </div>
-
-
-        <div class="item-manager">
-
+        <div class="section-title">
           <h2>물건 목록</h2>
+          <button id="admin-login-btn" class="small-btn">
+            관리자 로그인
+          </button>
+        </div>
+
+        <div id="admin-controls" class="admin-controls hidden">
+
+          <p class="admin-label">관리자 모드</p>
 
           <div class="item-input">
             <input
@@ -82,79 +90,136 @@
               id="item-name"
               placeholder="새로운 물건 입력"
             >
-
             <button id="add-item-btn">추가</button>
           </div>
 
-          <div id="item-list" class="item-list"></div>
-
         </div>
 
+        <div id="item-list" class="item-list"></div>
 
-        <div class="history-box">
+      </div>
 
+
+      <!-- 뽑기 기록 -->
+      <div class="history-box">
+
+        <div class="section-title">
           <h2>뽑기 기록</h2>
 
-          <button id="clear-history-btn" class="small-btn">
+          <button
+            id="clear-history-btn"
+            class="small-btn hidden"
+          >
             기록 삭제
           </button>
-
-          <div id="draw-history"></div>
-
         </div>
 
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- 메모 작성 창 -->
-
-  <div id="memo-modal" class="modal">
-
-    <div class="modal-box">
-
-      <div class="modal-header">
-        <h2>메모 작성</h2>
-        <button id="close-modal" class="close-btn">×</button>
-      </div>
-
-      <input
-        type="text"
-        id="memo-title"
-        placeholder="제목"
-      >
-
-      <textarea
-        id="memo-content"
-        placeholder="내용을 입력하세요."
-      ></textarea>
-
-      <p class="color-label">메모지 색상</p>
-
-      <div class="color-options">
-
-        <button class="color-option selected" data-color="yellow" style="background:#fff2a8"></button>
-        <button class="color-option" data-color="pink" style="background:#ffd6df"></button>
-        <button class="color-option" data-color="blue" style="background:#d5edff"></button>
-        <button class="color-option" data-color="green" style="background:#d9f2d6"></button>
-        <button class="color-option" data-color="purple" style="background:#e9dcff"></button>
-        <button class="color-option" data-color="orange" style="background:#ffdfc2"></button>
+        <div id="draw-history"></div>
 
       </div>
-
-      <button id="save-memo-btn" class="primary-btn save-btn">
-        저장하기
-      </button>
 
     </div>
 
+  </section>
+
+</main>
+
+
+<!-- 메모 작성 모달 -->
+<div id="memo-modal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <h2>메모 작성</h2>
+      <button id="close-modal" class="close-btn">×</button>
+    </div>
+
+    <input
+      type="text"
+      id="memo-title"
+      placeholder="제목"
+    >
+
+    <textarea
+      id="memo-content"
+      placeholder="내용을 입력하세요."
+    ></textarea>
+
+    <p class="color-label">메모지 색상</p>
+
+    <div class="color-options">
+
+      <button class="color-option selected"
+        data-color="yellow"
+        style="background:#fff2a8"></button>
+
+      <button class="color-option"
+        data-color="pink"
+        style="background:#ffd6df"></button>
+
+      <button class="color-option"
+        data-color="blue"
+        style="background:#d5edff"></button>
+
+      <button class="color-option"
+        data-color="green"
+        style="background:#d9f2d6"></button>
+
+      <button class="color-option"
+        data-color="purple"
+        style="background:#e9dcff"></button>
+
+      <button class="color-option"
+        data-color="orange"
+        style="background:#ffdfc2"></button>
+
+    </div>
+
+    <button id="save-memo-btn" class="primary-btn save-btn">
+      저장하기
+    </button>
+
   </div>
 
+</div>
 
-  <script src="script.js"></script>
+
+<!-- 관리자 로그인 모달 -->
+<div id="login-modal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <h2>관리자 로그인</h2>
+      <button id="close-login-modal" class="close-btn">×</button>
+    </div>
+
+    <input
+      type="email"
+      id="admin-email"
+      placeholder="이메일"
+    >
+
+    <input
+      type="password"
+      id="admin-password"
+      placeholder="비밀번호"
+    >
+
+    <button id="login-submit-btn" class="primary-btn save-btn">
+      로그인
+    </button>
+
+    <p id="login-message"></p>
+
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
 
 </body>
 </html>

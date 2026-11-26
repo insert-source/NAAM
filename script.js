@@ -1229,3 +1229,22 @@ function setupStickerControls(el, sticker) {
 /* 스티커 초기 표시 */
 
 renderStickers();
+/* ==========================================
+   메모와 스티커 레이어 통합
+========================================== */
+
+function bringToFront(element, item) {
+
+  const memoIndexes = memos.map(m => Number(m.zIndex) || 0);
+  const stickerIndexes = stickers.map(s => Number(s.zIndex) || 0);
+
+  const highest = Math.max(0, ...memoIndexes, ...stickerIndexes);
+
+  const nextIndex = highest + 1;
+
+  item.zIndex = nextIndex;
+  element.style.zIndex = nextIndex;
+
+  saveMemos();
+  saveStickers();
+}

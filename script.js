@@ -645,16 +645,18 @@ async function loadItems() {
    경품 추가
 ========================================== */
 
-document.getElementById('add-item-btn')
-  .addEventListener('click', addItem);
+const addItemBtn = document.getElementById('add-item-btn');
+const itemNameInput = document.getElementById('item-name');
 
+if (addItemBtn) {
+  addItemBtn.addEventListener('click', addItem);
+}
 
-document.getElementById('item-name')
-  .addEventListener('keydown', e => {
-
+if (itemNameInput) {
+  itemNameInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') addItem();
-
   });
+}
 
 
 async function addItem() {

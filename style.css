@@ -642,3 +642,192 @@ main {
 .logo span {
   font-size: inherit;
 }
+/* ==================================
+   메모 페이지 - 다이어리 디자인
+================================== */
+
+body {
+  background: #f5f0e8;
+  color: #514b46;
+}
+
+.header {
+  background: #fffaf3;
+  border-bottom: 1px solid #e8dfd2;
+}
+
+.logo {
+  color: #62574f;
+}
+
+.tab {
+  color: #998b80;
+}
+
+.tab.active {
+  background: #d8bda9;
+  color: white;
+}
+
+.page-heading h1 {
+  color: #62574f;
+}
+
+.page-heading p {
+  color: #a49689;
+}
+
+#memo-page .primary-btn {
+  background: #cba990;
+  color: white;
+}
+
+#memo-page .primary-btn:hover {
+  background: #b99278;
+}
+
+
+/* 메모 도구 */
+
+.memo-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  color: #a49689;
+  font-size: 13px;
+}
+
+.sticker-tool-btn {
+  padding: 11px 17px;
+  border-radius: 12px;
+  background: #fffaf3;
+  color: #806c5d;
+  border: 1px solid #eadccd;
+  font-weight: 700;
+}
+
+.sticker-tool-btn:hover {
+  background: #f5e8dc;
+}
+
+
+/* 이모지 선택창 */
+
+.emoji-picker {
+  position: relative;
+  z-index: 500;
+  width: 100%;
+  max-width: 420px;
+  padding: 18px;
+  margin-bottom: 15px;
+  background: #fffaf5;
+  border: 1px solid #eadccd;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(100, 75, 50, 0.12);
+}
+
+.emoji-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.emoji-picker-header h3 {
+  margin: 0;
+  color: #6e5c50;
+}
+
+#close-emoji-picker {
+  background: transparent;
+  font-size: 24px;
+  color: #a49689;
+}
+
+#emoji-search {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #eadccd;
+  border-radius: 9px;
+  background: white;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+.emoji-list {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.emoji-choice {
+  background: transparent;
+  border-radius: 8px;
+  padding: 7px 2px;
+  font-size: 25px;
+}
+
+.emoji-choice:hover {
+  background: #f4e8dc;
+}
+
+
+/* 메모 보드 */
+
+.memo-board {
+  background: #eae1d6;
+  border: 1px solid #ddd0c1;
+  border-radius: 17px;
+  min-height: 700px;
+  overflow: hidden;
+}
+
+
+/* 메모지 */
+
+.memo {
+  border-radius: 5px 5px 12px 5px;
+  box-shadow: 3px 6px 15px rgba(90, 70, 50, 0.15);
+}
+
+.memo.yellow {
+  background: #fff4bd;
+}
+
+.memo.pink {
+  background: #ffdee5;
+}
+
+.memo.blue {
+  background: #dceeff;
+}
+
+.memo.green {
+  background: #e0f2d8;
+}
+
+.memo.purple {
+  background: #eee2ff;
+}
+
+.memo.orange {
+  background: #ffe2ca;
+}
+
+
+/* 모바일 */
+
+@media (max-width: 680px) {
+
+  .memo-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .emoji-list {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+}

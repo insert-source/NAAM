@@ -92,7 +92,11 @@ memoBoard.style.position = 'relative';
     card.style.width = (memo.width || 220) + 'px';
     card.style.height = (memo.height || 185) + 'px';
 
-    card.style.zIndex = memo.zIndex || 1;
+card.style.setProperty(
+  'z-index',
+  String(Number(memo.zIndex) || 1),
+  'important'
+);
 
 
     const title = document.createElement('h3');

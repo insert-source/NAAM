@@ -565,6 +565,7 @@ function updateAdminUI() {
   const adminControls = document.getElementById('admin-controls');
   const clearHistoryBtn = document.getElementById('clear-history-btn');
   const adminLoginBtn = document.getElementById('admin-login-btn');
+  const itemList = document.getElementById('item-list');
 
   if (adminControls) {
     adminControls.classList.toggle('hidden', !isAdmin);
@@ -579,84 +580,60 @@ function updateAdminUI() {
       isAdmin ? '관리자 로그아웃' : '관리자 로그인';
   }
 
+  if (itemList) {
+    itemList.classList.toggle('hidden', !isAdmin);
+  }
+
 }
+
 
 /* ==========================================
    랜덤 물건 목록
-   현재 홈페이지에서는 목록을 표시하지 않음
 ========================================== */
 
 async function loadItems() {
-  return;
-}
+
   const list = document.getElementById('item-list');
 
-  list.innerHTML = '<p>물건 목록을 불러오는 중...</p>';
-
+  if (!list || currentUser?.id !== ADMIN_ID) return;
 
   const { data, error } = await supabaseClient
     .from('random_items')
     .select('name')
     .order('name');
 
-
   if (error) {
-
     list.textContent = '물건 목록을 불러오지 못했어.';
-
     console.error(error);
-
     return;
-
   }
-
 
   list.innerHTML = '';
 
-
   if (!data || data.length === 0) {
-
     list.textContent = '등록된 물건이 없어.';
-
     return;
-
   }
-
 
   data.forEach(item => {
 
     const tag = document.createElement('div');
-
     tag.className = 'item-tag';
 
-
     const name = document.createElement('span');
-
     name.textContent = item.name;
-
 
     tag.appendChild(name);
 
+    const remove = document.createElement('button');
+    remove.textContent = '×';
+    remove.title = '삭제';
 
-    if (currentUser?.id === ADMIN_ID) {
+    remove.addEventListener('click', () => {
+      deleteItem(item.name);
+    });
 
-      const remove = document.createElement('button');
-
-      remove.textContent = '×';
-
-      remove.title = '삭제';
-
-      remove.addEventListener('click', () => {
-
-        deleteItem(item.name);
-
-      });
-
-      tag.appendChild(remove);
-
-    }
-
-
+    tag.appendChild(remove);
     list.appendChild(tag);
 
   });

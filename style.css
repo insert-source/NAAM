@@ -906,3 +906,13 @@ body {
   position: relative;
   z-index: 2147483647 !important;
 }
+/* 메모와 스티커의 공통 레이어 기준 */
+.memo-board {
+  position: relative;
+  isolation: isolate;
+}
+
+/* 메모의 위치와 쌓임 순서 */
+.memo {
+  position: absolute;
+}

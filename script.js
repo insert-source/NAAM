@@ -1271,3 +1271,17 @@ function bringToFront(element, item) {
   saveMemos();
   saveStickers();
 }
+function normalizeLayers() {
+  const allItems = [...memos, ...stickers];
+
+  allItems.sort((a, b) => {
+    return (Number(a.zIndex) || 0) - (Number(b.zIndex) || 0);
+  });
+
+  allItems.forEach((item, index) => {
+    item.zIndex = index + 1;
+  });
+
+  saveMemos();
+  saveStickers();
+}

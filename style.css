@@ -998,3 +998,45 @@ body {
 #memo-page .memo-board {
   background: #34353c !important;
 }
+/* 메모 페이지 다크모드 글씨와 버튼 */
+
+#memo-page .page-heading h1 {
+  color: #eeeeF5 !important;
+}
+
+#memo-page .page-heading p {
+  color: #aaaab8 !important;
+}
+
+.tab {
+  color: #aaaab8 !important;
+}
+
+.tab.active {
+  background: #55566a !important;
+  color: #ffffff !important;
+}
+
+#memo-page .primary-btn {
+  background: #62647d !important;
+  color: #ffffff !important;
+  border: 1px solid #777991;
+}
+
+#memo-page .primary-btn:hover {
+  background: #777991 !important;
+}
+
+.memo-toolbar {
+  color: #c3c3d0 !important;
+}
+
+.sticker-tool-btn {
+  background: #454653 !important;
+  color: #eeeeF5 !important;
+  border: 1px solid #626373 !important;
+}
+
+.sticker-tool-btn:hover {
+  background: #55566a !important;
+}

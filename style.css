@@ -634,8 +634,8 @@ main {
 }
 
 .logo img {
-  width: 42px;
-  height: 42px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
 }
 

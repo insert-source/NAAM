@@ -1040,3 +1040,26 @@ body {
 .sticker-tool-btn:hover {
   background: #55566a !important;
 }
+/* 헤더 다크모드 */
+.header {
+  background: #303138 !important;
+  border-bottom: 1px solid #44454d !important;
+}
+
+.logo {
+  color: #eeeeF5 !important;
+}
+
+/* RANDOM 페이지 제목 */
+#random-page .page-heading h1 {
+  color: #eeeeF5 !important;
+}
+
+#random-page .page-heading p {
+  color: #aaaab8 !important;
+}
+
+/* RANDOM 페이지 배경 */
+#random-page {
+  background: #25262b !important;
+}

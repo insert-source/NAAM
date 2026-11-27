@@ -1065,11 +1065,10 @@ body {
 }
 /* 헤더 배경 밝게 */
 .header {
-  background: #41434c !important;
-  border-bottom: 1px solid #555761 !important;
+  background: #777985 !important;
+  border-bottom: 1px solid #92939d !important;
 }
 
-/* 로고 글씨 */
 .logo {
-  color: #eeeeF5 !important;
+  color: #252b45 !important;
 }

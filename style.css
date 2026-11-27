@@ -978,3 +978,23 @@ body {
 #memo-page {
   background: #25262b !important;
 }
+/* 메모 페이지 전체 다크 배경 */
+#memo-page,
+#memo-page.active,
+.page#memo-page {
+  background-color: #25262b !important;
+  background-image: none !important;
+}
+
+/* 메모 페이지 내부의 기본 배경 제거 */
+#memo-page .page-heading {
+  background: transparent !important;
+}
+
+#memo-page .memo-toolbar {
+  background: #303138 !important;
+}
+
+#memo-page .memo-board {
+  background: #34353c !important;
+}

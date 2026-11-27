@@ -916,3 +916,57 @@ body {
 .memo {
   position: absolute;
 }
+/* ==========================================
+   메모 페이지 다크모드
+========================================== */
+
+body {
+  background: #25262b;
+  color: #e8e6e3;
+}
+
+.header {
+  background: #303138;
+  border-bottom: 1px solid #44454d;
+}
+
+.memo-toolbar {
+  background: #303138;
+  color: #dedde3;
+}
+
+.memo-board {
+  background: #34353c;
+  border: 1px solid #4b4c55;
+}
+
+/* 메모지는 파스텔 색상 유지 */
+.memo.yellow { background: #fff4bd; color: #514b46; }
+.memo.pink { background: #ffdee5; color: #514b46; }
+.memo.blue { background: #dceeff; color: #514b46; }
+.memo.green { background: #e0f2d8; color: #514b46; }
+.memo.purple { background: #eee2ff; color: #514b46; }
+.memo.orange { background: #ffe2ca; color: #514b46; }
+
+/* 이모지 선택창 */
+.emoji-picker {
+  background: #303138;
+  color: #eee;
+  border: 1px solid #50515b;
+}
+
+.emoji-picker input {
+  background: #41424b;
+  color: #fff;
+  border: 1px solid #5b5c66;
+}
+
+/* 버튼 */
+.sticker-tool-btn {
+  background: #55566a;
+  color: #fff;
+}
+
+.sticker-tool-btn:hover {
+  background: #686980;
+}

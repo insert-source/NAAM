@@ -970,3 +970,11 @@ body {
 .sticker-tool-btn:hover {
   background: #686980;
 }
+/* 메모 페이지 배경 강제 다크모드 */
+body {
+  background: #25262b !important;
+}
+
+#memo-page {
+  background: #25262b !important;
+}

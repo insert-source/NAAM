@@ -1062,7 +1062,7 @@ let stickerZIndex = 1000;
 function saveStickers() {
   localStorage.setItem('stickers', JSON.stringify(stickers));
 }
-
+normalizeLayers();
 
 /* 스티커 추가 */
 

@@ -1063,3 +1063,13 @@ body {
 #random-page {
   background: #25262b !important;
 }
+/* 헤더 배경 밝게 */
+.header {
+  background: #41434c !important;
+  border-bottom: 1px solid #555761 !important;
+}
+
+/* 로고 글씨 */
+.logo {
+  color: #eeeeF5 !important;
+}

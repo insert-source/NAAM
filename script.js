@@ -1594,12 +1594,7 @@ function setupStickerControls(el, sticker) {
    메모와 스티커 레이어 통합
 ========================================== */
 function bringToFront(element, item) {
-  // 생성 순서에 따른 레이어 고정
-  element.style.setProperty(
-    'z-index',
-    String(Number(item.zIndex) || 1),
-    'important'
-  );
+  return;
 }
 
 /* ==========================================

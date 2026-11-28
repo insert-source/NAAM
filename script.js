@@ -614,8 +614,7 @@ document.querySelectorAll('.color-option')
 document.getElementById('save-memo-btn')
   .addEventListener('click', async () => {
 
-    const button =
-      document.getElementById('save-memo-btn');
+    const button = document.getElementById('save-memo-btn');
 
     const content = document
       .getElementById('memo-content')
@@ -637,9 +636,7 @@ document.getElementById('save-memo-btn')
 
       if (editingId !== null) {
 
-        const memo = memos.find(
-          m => m.id === editingId
-        );
+        const memo = memos.find(m => m.id === editingId);
 
         if (!memo || !canEditObject(memo)) {
           alert('수정 권한이 없습니다.');
@@ -654,55 +651,22 @@ document.getElementById('save-memo-btn')
 
       } else {
 
-
-
-  const position = getBoardCenterPosition(
-    220,
-    185
-  );
-
-  success = await createBoardObject('memo', {
-
-    content,
-    color: selectedColor,
-
-    x: position.x,
-    y: position.y,
-
-    width: 220,
-    height: 185
-
-  });
-
-}
+        const position = getBoardCenterPosition(220, 185);
 
         success = await createBoardObject('memo', {
-
           content,
           color: selectedColor,
-
-          x: Math.max(
-            10,
-            Math.min(
-              Math.max(10, boardWidth - 240),
-              (boardWidth - 240) / 2 + offset % 150
-            )
-          ),
-
-          y: 20 + offset % 300,
-
+          x: position.x,
+          y: position.y,
           width: 220,
           height: 185
-
         });
 
       }
 
       if (success) {
-
         modal.classList.remove('open');
         editingId = null;
-
       }
 
     } catch (error) {
@@ -717,7 +681,6 @@ document.getElementById('save-memo-btn')
     }
 
   });
-
 
 /* ==========================================
    메모 수정

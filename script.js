@@ -1281,30 +1281,7 @@ async function drawPrize() {
 
 }
 
-    await loadHistory();
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    status.textContent =
-      '오류가 발생했어: ' +
-      (error.message || '다시 시도해 줘.');
-
-
- } finally {
-
-  resultBox.classList.remove('drawing');
-
-  button.disabled = false;
-
-  button.textContent = '물건 뽑기';
-
-}
-}
-
-
+ 
 /* ==========================================
    뽑기 기록
 ========================================== */

@@ -2007,3 +2007,127 @@ textarea:focus {
     filter: blur(0);
   }
 }
+/* ==========================================
+   NAAM HOTEL — 기관 로고 강조
+========================================== */
+
+header,
+.header {
+  position: relative;
+
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f7f5ef 50%,
+    #eeebe3 100%
+  );
+
+  padding: 28px 24px;
+
+  color: #003b60;
+
+  border-bottom: 4px double #b79a63;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* 상단 황동 장식선 */
+
+header::before,
+.header::before {
+  content: '';
+  position: absolute;
+
+  top: 8px;
+  left: 20px;
+  right: 20px;
+
+  height: 1px;
+  background: #c5ad7c;
+}
+
+/* 국가이능관리청 로고 */
+
+header img,
+.header img,
+.logo img,
+img.logo {
+  width: 130px;
+  height: 130px;
+
+  max-width: none;
+  max-height: none;
+
+  object-fit: contain;
+
+  border: none;
+  border-radius: 0;
+
+  background: transparent;
+
+  filter: none;
+  box-shadow: none;
+
+  flex-shrink: 0;
+}
+
+/* NAAM 타이틀 */
+
+header h1,
+.header h1 {
+  color: #003b60;
+
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 42px;
+  font-weight: 600;
+
+  letter-spacing: 8px;
+}
+
+/* 호텔 부제 */
+
+header h1::after,
+.header h1::after {
+  content: 'HOTEL & GUEST SERVICES';
+
+  display: block;
+
+  margin-top: 8px;
+
+  color: #9c8355;
+
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+}
+
+/* 모바일 */
+
+@media (max-width: 600px) {
+
+  header,
+  .header {
+    padding: 22px 15px;
+  }
+
+  header img,
+  .header img,
+  .logo img,
+  img.logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  header h1,
+  .header h1 {
+    font-size: 30px;
+    letter-spacing: 5px;
+  }
+
+  header h1::after,
+  .header h1::after {
+    font-size: 9px;
+    letter-spacing: 2px;
+  }
+
+}

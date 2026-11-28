@@ -1593,50 +1593,14 @@ function setupStickerControls(el, sticker) {
 /* ==========================================
    메모와 스티커 레이어 통합
 ========================================== */
-
 function bringToFront(element, item) {
-
-  const allItems = [
-
-    ...memos,
-    ...stickers
-
-  ];
-
-
-  const highest = Math.max(
-
-    0,
-
-    ...allItems.map(
-      obj => Number(obj.zIndex) || 0
-    )
-
-  );
-
-
-  const nextIndex = highest + 1;
-
-  item.zIndex = nextIndex;
-
-
+  // 생성 순서에 따른 레이어 고정
   element.style.setProperty(
-
     'z-index',
-
-    String(nextIndex),
-
+    String(Number(item.zIndex) || 1),
     'important'
-
   );
-
-
-  saveMemos();
-
-  saveStickers();
-
 }
-
 
 /* ==========================================
    레이어 정리

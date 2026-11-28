@@ -2241,3 +2241,497 @@ header h1::after,
     animation: none;
   }
 }
+/* ==========================================
+   NAAM HOTEL — LIGHT EDITION
+========================================== */
+
+:root {
+  color-scheme: light;
+
+  --hotel-green: #354b40;
+  --hotel-green-dark: #293c33;
+  --hotel-gold: #b49a6c;
+  --hotel-gold-light: #e5d6b7;
+  --hotel-cream: #f8f5ee;
+  --hotel-walnut: #604b38;
+  --hotel-text: #51483c;
+}
+
+/* 전체 배경 */
+
+html,
+body {
+  min-height: 100vh;
+
+  background: #f5f2eb !important;
+  color: #51483c !important;
+
+  background-image: none !important;
+}
+
+main,
+.container,
+.page {
+  background: transparent;
+  color: #51483c;
+}
+
+/* ==========================================
+   헤더 및 로고
+========================================== */
+
+header,
+.header {
+  height: auto !important;
+  min-height: 100px;
+  max-height: none !important;
+
+  padding: 20px 24px;
+
+  overflow: visible !important;
+
+  background: #fffdf8 !important;
+  color: #003b60;
+
+  border-bottom: 3px double #b49a6c;
+
+  box-shadow: 0 3px 12px rgba(70, 50, 30, 0.06);
+}
+
+header img,
+.header img,
+.logo img,
+img.logo {
+  display: block;
+
+  width: 64px !important;
+  height: 64px !important;
+
+  min-width: 0 !important;
+  min-height: 0 !important;
+
+  max-width: 64px !important;
+  max-height: 64px !important;
+
+  object-fit: contain !important;
+  object-position: center;
+
+  flex-shrink: 0;
+
+  background: transparent;
+  border: none;
+  border-radius: 0;
+
+  filter: none;
+  box-shadow: none;
+}
+
+.logo,
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  height: auto;
+  overflow: visible;
+}
+
+header h1,
+.header h1 {
+  margin: 0;
+
+  color: #003b60;
+
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: 6px;
+}
+
+header h1::after,
+.header h1::after {
+  content: 'HOTEL & GUEST SERVICES';
+
+  display: block;
+  margin-top: 5px;
+
+  color: #9c8968;
+
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+/* ==========================================
+   밝은 호텔 메뉴
+========================================== */
+
+.tabs {
+  background: #ebe4d6 !important;
+
+  border: none;
+  border-bottom: 1px solid #cdbb9c;
+
+  box-shadow: none;
+}
+
+.tab {
+  background: transparent !important;
+  color: #94836a !important;
+
+  font-size: 14px;
+  letter-spacing: 2px;
+
+  border: none;
+  border-radius: 0;
+
+  box-shadow: none;
+}
+
+.tab.active {
+  background: #f8f5ee !important;
+  color: #354b40 !important;
+}
+
+.tab:hover {
+  background: #f2ede3 !important;
+  color: #354b40 !important;
+}
+
+.tab.active::after {
+  background: #b49a6c;
+}
+
+/* ==========================================
+   게시판
+========================================== */
+
+#memo-page {
+  background: transparent !important;
+}
+
+#memo-page::before {
+  background: linear-gradient(
+    110deg,
+    #d1bb91,
+    #eee0bf,
+    #cbb184
+  );
+
+  color: #685338;
+  border: 3px double #ad956b;
+
+  box-shadow: 0 2px 5px rgba(70, 50, 30, 0.1);
+}
+
+#memo-board {
+  background-color: #d5c5a8;
+
+  border: 10px solid #8a7053;
+  outline: 2px solid #c1a77c;
+
+  box-shadow:
+    inset 0 0 0 2px #b49a6c,
+    inset 0 0 20px rgba(80, 60, 40, 0.12),
+    0 5px 0 #70573e,
+    0 12px 20px rgba(80, 60, 40, 0.1);
+
+  isolation: isolate;
+}
+
+/* 메모지 색상 */
+
+.memo.yellow {
+  background: #f8edc8;
+}
+
+.memo.pink {
+  background: #f1dcd6;
+}
+
+.memo.blue {
+  background: #dce7ed;
+}
+
+.memo.green {
+  background: #e1e8d4;
+}
+
+.memo.purple {
+  background: #e7dfea;
+}
+
+.memo.orange {
+  background: #f0ddc7;
+}
+
+.memo p {
+  color: #51483c;
+}
+
+.memo-date {
+  color: #968672;
+}
+
+/* ==========================================
+   호텔 버튼
+========================================== */
+
+#add-memo-btn,
+#add-sticker-btn,
+#admin-login-btn,
+#add-item-btn,
+#save-memo-btn,
+#login-submit-btn {
+  background: #fdfaf3 !important;
+  color: #756044 !important;
+
+  border: 1px solid #bba37b;
+  border-radius: 3px;
+
+  box-shadow: 0 2px 4px rgba(80, 60, 40, 0.06);
+}
+
+#add-memo-btn:hover,
+#add-sticker-btn:hover,
+#admin-login-btn:hover,
+#add-item-btn:hover,
+#save-memo-btn:hover,
+#login-submit-btn:hover {
+  background: #eae0cd !important;
+}
+
+/* ==========================================
+   밝은 호텔 추첨기
+========================================== */
+
+#random-page {
+  background: transparent !important;
+}
+
+#random-page::before {
+  color: #756044;
+}
+
+/* 추첨기 결과 표시창 */
+
+#draw-result {
+  background: linear-gradient(
+    145deg,
+    #fffdf6,
+    #eee4d0
+  ) !important;
+
+  color: #685338 !important;
+
+  border: 8px solid #c1a77c;
+  outline: 1px solid #9e835a;
+
+  box-shadow:
+    inset 0 0 0 2px #e5d5b7,
+    inset 0 0 18px rgba(100, 80, 50, 0.08),
+    0 5px 0 #a58a60,
+    0 12px 20px rgba(80, 60, 40, 0.1);
+}
+
+#draw-result::before,
+#draw-result::after {
+  color: #a18b66;
+}
+
+#draw-result span {
+  color: #685338 !important;
+  text-shadow: none;
+}
+
+/* ==========================================
+   밝은 슬롯머신 표시창
+========================================== */
+
+.slot-window {
+  background: #faf5e9 !important;
+
+  border-top: 1px solid #d4c19f;
+  border-bottom: 1px solid #d4c19f;
+}
+
+.slot-window::before {
+  background: linear-gradient(
+    to bottom,
+    #faf5e9,
+    transparent
+  );
+}
+
+.slot-window::after {
+  background: linear-gradient(
+    to top,
+    #faf5e9,
+    transparent
+  );
+}
+
+#draw-result .slot-item {
+  color: #685338 !important;
+  text-shadow: none;
+}
+
+/* 추첨 버튼 */
+
+#draw-btn {
+  background: linear-gradient(
+    180deg,
+    #ead8b3,
+    #c7aa78
+  ) !important;
+
+  color: #59472f !important;
+
+  border: 1px solid #ad9368;
+
+  box-shadow:
+    inset 0 1px 1px #fff1d3,
+    0 4px 0 #9e835a,
+    0 7px 12px rgba(80, 60, 40, 0.12);
+}
+
+#draw-btn:hover {
+  background: #e5d1aa !important;
+}
+
+#draw-description,
+#draw-status {
+  color: #8a795e !important;
+}
+
+/* 당첨 효과 */
+
+#draw-result.revealed {
+  animation: light-prize-glow 1.2s ease-out;
+}
+
+@keyframes light-prize-glow {
+  0% {
+    box-shadow: 0 0 35px rgba(210, 175, 100, 0.65);
+  }
+
+  100% {
+    box-shadow:
+      inset 0 0 0 2px #e5d5b7,
+      0 5px 0 #a58a60,
+      0 12px 20px rgba(80, 60, 40, 0.1);
+  }
+}
+
+/* ==========================================
+   기록 및 관리자 카드
+========================================== */
+
+.card,
+.panel,
+.draw-card,
+.random-card,
+.admin-card,
+.history-card,
+#admin-controls,
+#draw-history {
+  background: #fffdf7 !important;
+  color: #51483c !important;
+
+  border: 1px solid #d8cbb3;
+  border-radius: 4px;
+
+  box-shadow: 0 4px 12px rgba(80, 60, 40, 0.05);
+}
+
+.history-item {
+  background: transparent !important;
+  border-bottom: 1px solid #e6ddcd;
+}
+
+.history-item strong {
+  color: #685338;
+}
+
+.history-item span {
+  color: #a3947e;
+}
+
+/* ==========================================
+   팝업 및 입력창
+========================================== */
+
+.modal-content,
+.modal-box,
+#emoji-picker {
+  background: #fffdf7 !important;
+  color: #51483c !important;
+
+  border: 3px double #bba37b;
+}
+
+input,
+textarea {
+  background: #faf7ef !important;
+  color: #51483c !important;
+
+  border: 1px solid #d6c9b0;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #b1a38e;
+}
+
+/* ==========================================
+   모바일
+========================================== */
+
+@media (max-width: 600px) {
+
+  header,
+  .header {
+    height: auto !important;
+    min-height: 80px;
+
+    padding: 15px;
+  }
+
+  header img,
+  .header img,
+  .logo img,
+  img.logo {
+    width: 50px !important;
+    height: 50px !important;
+
+    max-width: 50px !important;
+    max-height: 50px !important;
+  }
+
+  header h1,
+  .header h1 {
+    font-size: 25px;
+    letter-spacing: 4px;
+  }
+
+  header h1::after,
+  .header h1::after {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+
+  #memo-board {
+    border-width: 6px;
+  }
+
+  #draw-result {
+    border-width: 5px;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #draw-result.revealed {
+    animation: none;
+  }
+}

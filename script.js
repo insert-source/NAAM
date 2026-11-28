@@ -654,7 +654,7 @@ document.getElementById('save-memo-btn')
 
       } else {
 
-      } else {
+
 
   const position = getBoardCenterPosition(
     220,

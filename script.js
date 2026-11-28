@@ -3,9 +3,7 @@
 ========================================== */
 
 const SUPABASE_URL = 'https://zflyufkyycugswtmgmby.supabase.co';
-
 const SUPABASE_KEY = 'sb_publishable_GKt2RLlHrov3EtJxoGFZCQ_v-FBm-K9';
-
 const ADMIN_ID = 'd4b40d10-07c5-44da-a481-234a531a62aa';
 
 const supabaseClient = window.supabase.createClient(
@@ -19,10 +17,47 @@ const supabaseClient = window.supabase.createClient(
 ========================================== */
 
 let memos = JSON.parse(localStorage.getItem('memos')) || [];
+let stickers = JSON.parse(localStorage.getItem('stickers')) || [];
 
 let selectedColor = 'yellow';
 let editingId = null;
 let currentUser = null;
+
+const modal = document.getElementById('memo-modal');
+const memoBoard = document.getElementById('memo-board');
+const loginModal = document.getElementById('login-modal');
+
+const emojiPicker = document.getElementById('emoji-picker');
+const emojiList = document.getElementById('emoji-list');
+const emojiSearch = document.getElementById('emoji-search');
+
+
+/* ==========================================
+   날짜 및 시간
+========================================== */
+
+function formatMemoDate(value) {
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return '';
+
+  const parts = new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23'
+  }).formatToParts(date);
+
+  const get = type =>
+    parts.find(part => part.type === type)?.value || '';
+
+  return `${get('year')}. ${get('month')}. ${get('day')}. ${get('hour')}:${get('minute')}`;
+
+}
 
 
 /* ==========================================
@@ -58,11 +93,8 @@ document.querySelectorAll('.tab').forEach(tab => {
 
 
 /* ==========================================
-   메모장
+   데이터 저장
 ========================================== */
-
-const modal = document.getElementById('memo-modal');
-const memoBoard = document.getElementById('memo-board');
 
 function saveMemos() {
 
@@ -73,17 +105,30 @@ function saveMemos() {
 
 }
 
+function saveStickers() {
+
+  localStorage.setItem(
+    'stickers',
+    JSON.stringify(stickers)
+  );
+
+}
+
+
+/* ==========================================
+   메모 표시
+========================================== */
 
 function renderMemos() {
 
   memoBoard.innerHTML = '';
-memoBoard.style.position = 'relative';
+  memoBoard.style.position = 'relative';
+
   memos.forEach(memo => {
 
     const card = document.createElement('div');
 
     card.className = `memo ${memo.color || 'yellow'}`;
-
     card.dataset.id = memo.id;
 
     card.style.left = (memo.x ?? 15) + 'px';
@@ -92,23 +137,36 @@ memoBoard.style.position = 'relative';
     card.style.width = (memo.width || 220) + 'px';
     card.style.height = (memo.height || 185) + 'px';
 
-card.style.setProperty(
-  'z-index',
-  String(Number(memo.zIndex) || 1),
-  'important'
-);
+    card.style.setProperty(
+      'z-index',
+      String(Number(memo.zIndex) || 1),
+      'important'
+    );
 
 
-    
+    /* 메모 본문 */
 
     const content = document.createElement('p');
-    content.textContent = memo.content;
+
+    content.textContent = memo.content || '';
+
+
+    /* 작성 날짜 및 시간 */
 
     const date = document.createElement('div');
+
     date.className = 'memo-date';
-    date.textContent = memo.date || '';
+
+    date.textContent =
+      formatMemoDate(memo.createdAt || Number(memo.id))
+      || memo.date
+      || '';
+
+
+    /* 수정 및 삭제 버튼 */
 
     const actions = document.createElement('div');
+
     actions.className = 'memo-actions';
 
 
@@ -121,8 +179,11 @@ card.style.setProperty(
     });
 
     editBtn.addEventListener('click', e => {
+
       e.stopPropagation();
+
       editMemo(memo.id);
+
     });
 
 
@@ -135,25 +196,37 @@ card.style.setProperty(
     });
 
     deleteBtn.addEventListener('click', e => {
+
       e.stopPropagation();
+
       deleteMemo(memo.id);
+
     });
 
 
     actions.append(editBtn, deleteBtn);
 
-  card.append(content, date, actions);
-card.addEventListener('pointerdown', () => {
-  bringToFront(card, memo);
-});
+    card.append(content, date, actions);
+
+
+    card.addEventListener('pointerdown', () => {
+
+      bringToFront(card, memo);
+
+    });
+
+
     memoBoard.appendChild(card);
 
-       setupMemoDrag(card, memo);
+    setupMemoDrag(card, memo);
     setupMemoResize(card, memo);
+
   });
 
   renderStickers();
+
 }
+
 
 /* ==========================================
    메모 추가
@@ -163,8 +236,6 @@ document.getElementById('add-memo-btn')
   .addEventListener('click', () => {
 
     editingId = null;
-
-    document.getElementById('memo-title').value = '';
 
     document.getElementById('memo-content').value = '';
 
@@ -185,7 +256,9 @@ document.getElementById('close-modal')
   });
 
 
-/* 색상 선택 */
+/* ==========================================
+   메모 색상 선택
+========================================== */
 
 function updateColorSelection() {
 
@@ -214,19 +287,19 @@ document.querySelectorAll('.color-option').forEach(btn => {
 });
 
 
-/* 메모 저장 */
+/* ==========================================
+   메모 저장
+========================================== */
 
 document.getElementById('save-memo-btn')
   .addEventListener('click', () => {
 
-    const title = document.getElementById('memo-title')
+    const content = document
+      .getElementById('memo-content')
       .value.trim();
 
-    const content = document.getElementById('memo-content')
-      .value.trim();
 
-
-    if (!title && !content) {
+    if (!content) {
 
       alert('메모 내용을 입력해 줘!');
 
@@ -235,45 +308,44 @@ document.getElementById('save-memo-btn')
     }
 
 
+    /* 기존 메모 수정 */
+
     if (editingId !== null) {
 
       const memo = memos.find(m => m.id === editingId);
 
       if (!memo) return;
 
-      memo.title = title || '제목 없음';
-
       memo.content = content;
-
       memo.color = selectedColor;
+
+      delete memo.title;
 
     } else {
 
-      const boardWidth = memoBoard.clientWidth;
 
+      /* 새 메모 작성 */
+
+      const boardWidth = memoBoard.clientWidth;
       const offset = memos.length * 25;
+      const now = Date.now();
 
       memos.push({
 
-        id: Date.now(),
-
-        title: title || '제목 없음',
+        id: now,
 
         content: content,
 
         color: selectedColor,
 
-   date: new Date().toLocaleString('ko-KR', {
-  timeZone: 'Asia/Seoul',
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: false
-}),
+        createdAt: now,
 
-        x: Math.max(10, (boardWidth - 240) / 2 + offset % 150),
+        date: formatMemoDate(now),
+
+        x: Math.max(
+          10,
+          (boardWidth - 240) / 2 + offset % 150
+        ),
 
         y: 20 + offset % 300,
 
@@ -281,11 +353,11 @@ document.getElementById('save-memo-btn')
 
         height: 185,
 
-   zIndex: Math.max(
-  0,
-  ...memos.map(m => Number(m.zIndex) || 0),
-  ...stickers.map(s => Number(s.zIndex) || 0)
-) + 1
+        zIndex: Math.max(
+          0,
+          ...memos.map(m => Number(m.zIndex) || 0),
+          ...stickers.map(s => Number(s.zIndex) || 0)
+        ) + 1
 
       });
 
@@ -298,10 +370,14 @@ document.getElementById('save-memo-btn')
 
     modal.classList.remove('open');
 
+    editingId = null;
+
   });
 
 
-/* 메모 수정 */
+/* ==========================================
+   메모 수정
+========================================== */
 
 function editMemo(id) {
 
@@ -311,9 +387,8 @@ function editMemo(id) {
 
   editingId = id;
 
-  document.getElementById('memo-title').value = memo.title;
-
-  document.getElementById('memo-content').value = memo.content;
+  document.getElementById('memo-content').value =
+    memo.content || '';
 
   selectedColor = memo.color || 'yellow';
 
@@ -324,7 +399,9 @@ function editMemo(id) {
 }
 
 
-/* 메모 삭제 */
+/* ==========================================
+   메모 삭제
+========================================== */
 
 function deleteMemo(id) {
 
@@ -362,13 +439,16 @@ function setupMemoDrag(card, memo) {
 
     const rect = card.getBoundingClientRect();
 
-    // 우측 아래 크기 조절 영역에서는 드래그하지 않음
+
+    /* 우측 하단 크기 조절 영역 */
+
     if (
       e.clientX > rect.right - 20 &&
       e.clientY > rect.bottom - 20
     ) {
       return;
     }
+
 
     dragging = true;
 
@@ -378,7 +458,7 @@ function setupMemoDrag(card, memo) {
     originalX = memo.x ?? 15;
     originalY = memo.y ?? 15;
 
-bringToFront(card, memo);
+    bringToFront(card, memo);
 
     card.setPointerCapture(e.pointerId);
 
@@ -413,7 +493,6 @@ bringToFront(card, memo);
     );
 
     card.style.left = memo.x + 'px';
-
     card.style.top = memo.y + 'px';
 
   });
@@ -453,8 +532,15 @@ function setupMemoResize(card, memo) {
 
     timer = setTimeout(() => {
 
-      memo.width = card.offsetWidth;
+      if (!card.isConnected) {
 
+        observer.disconnect();
+
+        return;
+
+      }
+
+      memo.width = card.offsetWidth;
       memo.height = card.offsetHeight;
 
       saveMemos();
@@ -469,11 +555,37 @@ function setupMemoResize(card, memo) {
 
 
 /* ==========================================
-   관리자 로그인
+   관리자 로그인 상태 확인
 ========================================== */
 
-const loginModal = document.getElementById('login-modal');
+async function checkLogin() {
 
+  const { data, error } =
+    await supabaseClient.auth.getSession();
+
+  if (error) {
+
+    console.error(error);
+
+    currentUser = null;
+
+  } else {
+
+    currentUser =
+      data.session?.user?.id === ADMIN_ID
+        ? data.session.user
+        : null;
+
+  }
+
+  updateAdminUI();
+
+}
+
+
+/* ==========================================
+   관리자 로그인 버튼
+========================================== */
 
 document.getElementById('admin-login-btn')
   .addEventListener('click', async () => {
@@ -482,17 +594,27 @@ document.getElementById('admin-login-btn')
 
       if (confirm('로그아웃할까?')) {
 
-        const { error } = await supabaseClient.auth.signOut();
+        const { error } =
+          await supabaseClient.auth.signOut();
 
         if (error) {
+
           alert(error.message);
+
+          return;
+
         }
+
+        currentUser = null;
+
+        updateAdminUI();
 
       }
 
       return;
 
     }
+
 
     document.getElementById('admin-email').value = '';
 
@@ -513,25 +635,31 @@ document.getElementById('close-login-modal')
   });
 
 
-/* 로그인 실행 */
+/* ==========================================
+   로그인 실행
+========================================== */
 
 document.getElementById('login-submit-btn')
   .addEventListener('click', async () => {
 
-    const email = document.getElementById('admin-email').value.trim();
+    const email = document
+      .getElementById('admin-email')
+      .value.trim();
 
-    const password = document.getElementById('admin-password').value;
+    const password = document
+      .getElementById('admin-password')
+      .value;
 
-    const message = document.getElementById('login-message');
+    const message =
+      document.getElementById('login-message');
 
     message.textContent = '로그인 중...';
 
 
-    const { data, error } = await supabaseClient.auth
-      .signInWithPassword({
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
 
         email,
-
         password
 
       });
@@ -539,7 +667,8 @@ document.getElementById('login-submit-btn')
 
     if (error) {
 
-      message.textContent = '로그인 실패: ' + error.message;
+      message.textContent =
+        '로그인 실패: ' + error.message;
 
       return;
 
@@ -549,6 +678,10 @@ document.getElementById('login-submit-btn')
     if (data.user.id !== ADMIN_ID) {
 
       await supabaseClient.auth.signOut();
+
+      currentUser = null;
+
+      updateAdminUI();
 
       message.textContent = '관리자 계정이 아닙니다.';
 
@@ -571,30 +704,65 @@ document.getElementById('login-submit-btn')
 
   });
 
+
+/* ==========================================
+   관리자 UI
+========================================== */
+
 function updateAdminUI() {
 
   const isAdmin = currentUser?.id === ADMIN_ID;
 
-  const adminControls = document.getElementById('admin-controls');
-  const clearHistoryBtn = document.getElementById('clear-history-btn');
-  const adminLoginBtn = document.getElementById('admin-login-btn');
-  const itemList = document.getElementById('item-list');
+  const adminControls =
+    document.getElementById('admin-controls');
+
+  const clearHistoryBtn =
+    document.getElementById('clear-history-btn');
+
+  const adminLoginBtn =
+    document.getElementById('admin-login-btn');
+
+  const itemList =
+    document.getElementById('item-list');
+
 
   if (adminControls) {
-    adminControls.classList.toggle('hidden', !isAdmin);
+
+    adminControls.classList.toggle(
+      'hidden',
+      !isAdmin
+    );
+
   }
+
 
   if (clearHistoryBtn) {
-    clearHistoryBtn.classList.toggle('hidden', !isAdmin);
+
+    clearHistoryBtn.classList.toggle(
+      'hidden',
+      !isAdmin
+    );
+
   }
+
 
   if (adminLoginBtn) {
+
     adminLoginBtn.textContent =
-      isAdmin ? '관리자 로그아웃' : '관리자 로그인';
+      isAdmin
+        ? '관리자 로그아웃'
+        : '관리자 로그인';
+
   }
 
+
   if (itemList) {
-    itemList.classList.toggle('hidden', !isAdmin);
+
+    itemList.classList.toggle(
+      'hidden',
+      !isAdmin
+    );
+
   }
 
 }
@@ -610,43 +778,65 @@ async function loadItems() {
 
   if (!list || currentUser?.id !== ADMIN_ID) return;
 
+
   const { data, error } = await supabaseClient
     .from('random_items')
     .select('name')
     .order('name');
 
+
   if (error) {
+
     list.textContent = '물건 목록을 불러오지 못했어.';
+
     console.error(error);
+
     return;
+
   }
+
 
   list.innerHTML = '';
 
+
   if (!data || data.length === 0) {
+
     list.textContent = '등록된 물건이 없어.';
+
     return;
+
   }
+
 
   data.forEach(item => {
 
     const tag = document.createElement('div');
+
     tag.className = 'item-tag';
 
+
     const name = document.createElement('span');
+
     name.textContent = item.name;
 
     tag.appendChild(name);
 
+
     const remove = document.createElement('button');
+
     remove.textContent = '×';
+
     remove.title = '삭제';
 
     remove.addEventListener('click', () => {
+
       deleteItem(item.name);
+
     });
 
+
     tag.appendChild(remove);
+
     list.appendChild(tag);
 
   });
@@ -658,17 +848,28 @@ async function loadItems() {
    경품 추가
 ========================================== */
 
-const addItemBtn = document.getElementById('add-item-btn');
-const itemNameInput = document.getElementById('item-name');
+const addItemBtn =
+  document.getElementById('add-item-btn');
+
+const itemNameInput =
+  document.getElementById('item-name');
+
 
 if (addItemBtn) {
+
   addItemBtn.addEventListener('click', addItem);
+
 }
 
+
 if (itemNameInput) {
+
   itemNameInput.addEventListener('keydown', e => {
+
     if (e.key === 'Enter') addItem();
+
   });
+
 }
 
 
@@ -761,8 +962,11 @@ async function deleteItem(name) {
 
 const drawButton = document.getElementById('draw-btn');
 
+
 if (drawButton) {
+
   drawButton.addEventListener('click', drawPrize);
+
 }
 
 
@@ -772,9 +976,11 @@ async function drawPrize() {
 
   const resultBox = document.getElementById('draw-result');
 
-  const description = document.getElementById('draw-description');
+  const description =
+    document.getElementById('draw-description');
 
-  const status = document.getElementById('draw-status');
+  const status =
+    document.getElementById('draw-status');
 
 
   button.disabled = true;
@@ -786,12 +992,16 @@ async function drawPrize() {
 
   try {
 
-    const { data, error } = await supabaseClient.functions.invoke(
-      'smooth-function',
-      {
-        method: 'POST'
-      }
-    );
+    const { data, error } =
+      await supabaseClient.functions.invoke(
+
+        'smooth-function',
+
+        {
+          method: 'POST'
+        }
+
+      );
 
 
     if (error) {
@@ -803,7 +1013,8 @@ async function drawPrize() {
 
     if (data?.already_drawn) {
 
-      status.textContent = '오늘은 이미 뽑기를 완료했어! 내일 다시 도전해 줘.';
+      status.textContent =
+        '오늘은 이미 뽑기를 완료했어! 내일 다시 도전해 줘.';
 
       return;
 
@@ -821,7 +1032,9 @@ async function drawPrize() {
 
     if (!data?.success || !data?.prize_name) {
 
-      throw new Error(data?.error || '뽑기에 실패했어.');
+      throw new Error(
+        data?.error || '뽑기에 실패했어.'
+      );
 
     }
 
@@ -830,6 +1043,7 @@ async function drawPrize() {
 
     resultBox.innerHTML = '';
 
+
     const span = document.createElement('span');
 
     span.textContent = prize;
@@ -837,19 +1051,23 @@ async function drawPrize() {
     resultBox.appendChild(span);
 
 
-    description.textContent = '오늘 선택된 물건은 ' + prize + ' 입니다.';
+    description.textContent =
+      '오늘 선택된 물건은 ' + prize + ' 입니다.';
 
     status.textContent = '오늘의 뽑기를 완료했어!';
 
 
     await loadHistory();
 
+
   } catch (error) {
 
     console.error(error);
 
     status.textContent =
-      '오류가 발생했어: ' + (error.message || '다시 시도해 줘.');
+      '오류가 발생했어: ' +
+      (error.message || '다시 시도해 줘.');
+
 
   } finally {
 
@@ -868,9 +1086,11 @@ async function drawPrize() {
 
 async function loadHistory() {
 
-  const container = document.getElementById('draw-history');
+  const container =
+    document.getElementById('draw-history');
 
-  container.innerHTML = '<p>기록을 불러오는 중...</p>';
+  container.innerHTML =
+    '<p>기록을 불러오는 중...</p>';
 
 
   const { data, error } = await supabaseClient
@@ -882,7 +1102,8 @@ async function loadHistory() {
 
   if (error) {
 
-    container.textContent = '기록을 불러오지 못했어.';
+    container.textContent =
+      '기록을 불러오지 못했어.';
 
     console.error(error);
 
@@ -896,7 +1117,8 @@ async function loadHistory() {
 
   if (!data || data.length === 0) {
 
-    container.textContent = '아직 뽑기 기록이 없어.';
+    container.textContent =
+      '아직 뽑기 기록이 없어.';
 
     return;
 
@@ -917,8 +1139,8 @@ async function loadHistory() {
 
     const date = document.createElement('span');
 
-    date.textContent = new Date(record.drawn_at)
-      .toLocaleString('ko-KR');
+    date.textContent =
+      new Date(record.drawn_at).toLocaleString('ko-KR');
 
 
     row.append(name, date);
@@ -975,10 +1197,497 @@ async function clearHistory() {
 
 
 /* ==========================================
+   이모지 스티커 목록
+========================================== */
+
+const emojiCategories = {
+
+  얼굴: '😀 😃 😄 😁 😆 😅 😂 🤣 🥲 🥹 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😗 😙 😚 😋 😛 😜 🤪 😝 🤑 🤗 🤭 🫢 🫣 🤫 🤔 🫡 🤐 🤨 😐 😑 😶 🫥 😏 😒 🙄 😬 😮‍💨 🤥 😔 😪 🤤 😴 😷 🤒 🤕 🤢 🤮 🤧 🥵 🥶 🥴 😵 🤯 🤠 🥳 🥸 😎 🤓 🧐 😕 🫤 😟 🙁 ☹️ 😮 😯 😲 😳 🥺 😦 😧 😨 😰 😥 😢 😭 😱 😖 😣 😞 😓 😩 😫 🥱 😤 😡 😠 🤬 😈 👿 💀 ☠️ 💩 🤡 👻 👽 👾 🤖 🎃',
+
+  동물: '🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐻‍❄️ 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🐝 🪱 🦋 🐌 🐞 🐜 🪰 🪲 🪳 🦟 🦗 🕷️ 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🦈 🐊 🦭 🦦 🦥 🐘 🦣 🦏 🦛 🐪 🐫 🦒 🦘 🦬 🐃 🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🦮 🐈 🐓 🦃 🦚 🦜 🦢 🦩 🕊️ 🐇 🦝 🦨 🦡 🦔 🐾',
+
+  식물: '🌵 🎄 🌲 🌳 🌴 🪵 🌱 🌿 ☘️ 🍀 🎍 🪴 🎋 🍃 🍂 🍁 🍄 🪺 🪻 🌷 🪷 🌹 🥀 🌺 🌸 🌼 🌻 🌞',
+
+  음식: '🍇 🍈 🍉 🍊 🍋 🍌 🍍 🥭 🍎 🍏 🍐 🍑 🍒 🍓 🫐 🥝 🍅 🫒 🥥 🥑 🍆 🥔 🥕 🌽 🌶️ 🫑 🥒 🥬 🥦 🧄 🧅 🥜 🫘 🌰 🍞 🥐 🥖 🫓 🥨 🥯 🥞 🧇 🧀 🍖 🍗 🥩 🥓 🍔 🍟 🍕 🌭 🥪 🌮 🌯 🫔 🥙 🧆 🍳 🥚 🧈 🧂 🍿 🍱 🍘 🍙 🍚 🍛 🍜 🍝 🍠 🍢 🍣 🍤 🍥 🥮 🍡 🥟 🥠 🥡 🦪 🍦 🍧 🍨 🍩 🍪 🎂 🍰 🧁 🥧 🍫 🍬 🍭 🍮 🍯 🍼 🥛 ☕ 🍵 🧃 🥤 🧋 🍶 🍺 🍷 🥂 🍹 🧉',
+
+  사물: '⌚ 📱 💻 🖥️ 🖨️ ⌨️ 🖱️ 💽 💾 💿 📷 📸 📹 🎥 📺 📻 🎙️ 🎧 🎤 📢 📣 🔔 🔕 🕯️ 💡 🔦 🏮 📔 📕 📖 📗 📘 📙 📚 📓 📒 📃 📜 📰 🗞️ 🔖 🏷️ 💰 💴 💵 💶 💷 💳 💎 ⚖️ 🧸 🪆 🪄 🎀 🎁 🎈 🎉 🎊 🎏 🎐 🪩 🪅 🖼️ 🪞 🛍️',
+
+  기호: '❤️ 🩷 🧡 💛 💚 💙 🩵 💜 🤎 🖤 🩶 🤍 💔 ❣️ 💕 💞 💓 💗 💖 💘 💝 💟 ☮️ ✝️ ☯️ ✡️ 🕉️ ☸️ 🔯 🪯 ☪️ ☦️ 🛐 ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ♐ ♑ ♒ ♓ 🆔 ⚛️ 🉑 ☢️ ☣️ 📴 📳 🈶 🈚 🈸 🈺 🈷️ ✴️ 🆚 💯 🔥 ✨ ⭐ 🌟 💫 ☀️ 🌙 ☁️ 🌈 ❄️ ⚡ 💧 💦 🌊 🎵 🎶 💭 💤',
+
+  활동: '⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🥏 🎱 🪀 🏓 🏸 🏒 🏑 🥍 🏏 🥅 ⛳ 🪁 🏹 🎣 🤿 🥊 🥋 🎽 🛹 🛼 🛷 ⛸️ 🥌 🎿 ⛷️ 🏂 🏋️ 🤸 🤼 🤽 🤾 🧗 🚴 🚵 🤹 🏇 🧘 🏄 🏊',
+
+  교통: '🚗 🚕 🚙 🚌 🚎 🏎️ 🚓 🚑 🚒 🚐 🛻 🚚 🚛 🚜 🏍️ 🛵 🚲 🛴 🛹 🚨 🚔 🚍 🚘 🚖 🚡 🚠 🚟 🚃 🚋 🚞 🚝 🚄 🚅 🚈 🚂 ✈️ 🛫 🛬 🛩️ 💺 🚁 🚀 🛸 🛶 ⛵ 🚤 🛥️ 🛳️ ⛴️ 🚢 ⚓'
+
+};
+
+
+let allEmojis = [];
+
+Object.values(emojiCategories).forEach(category => {
+
+  allEmojis.push(...category.split(' '));
+
+});
+
+allEmojis = [...new Set(allEmojis)];
+
+
+/* ==========================================
+   이모지 선택창
+========================================== */
+
+function renderEmojiList(search = '') {
+
+  emojiList.innerHTML = '';
+
+  const filtered = allEmojis.filter(emoji => {
+
+    return !search || emoji.includes(search);
+
+  });
+
+
+  filtered.forEach(emoji => {
+
+    const button = document.createElement('button');
+
+    button.className = 'emoji-choice';
+
+    button.textContent = emoji;
+
+    button.type = 'button';
+
+
+    button.addEventListener('click', () => {
+
+      addSticker(emoji);
+
+      emojiPicker.classList.add('hidden');
+
+      emojiSearch.value = '';
+
+      renderEmojiList();
+
+    });
+
+
+    emojiList.appendChild(button);
+
+  });
+
+}
+
+
+document.getElementById('add-sticker-btn')
+  .addEventListener('click', () => {
+
+    emojiPicker.classList.toggle('hidden');
+
+    renderEmojiList();
+
+  });
+
+
+document.getElementById('close-emoji-picker')
+  .addEventListener('click', () => {
+
+    emojiPicker.classList.add('hidden');
+
+  });
+
+
+emojiSearch.addEventListener('input', () => {
+
+  renderEmojiList(emojiSearch.value.trim());
+
+});
+
+
+/* ==========================================
+   스티커 추가
+========================================== */
+
+function addSticker(emoji) {
+
+  const sticker = {
+
+    id: Date.now() + Math.random(),
+
+    emoji: emoji,
+
+    x: 80 + Math.random() * 100,
+
+    y: 80 + Math.random() * 100,
+
+    size: 48,
+
+    rotation: 0,
+
+    zIndex: Math.max(
+      0,
+      ...memos.map(m => Number(m.zIndex) || 0),
+      ...stickers.map(s => Number(s.zIndex) || 0)
+    ) + 1
+
+  };
+
+
+  stickers.push(sticker);
+
+  saveStickers();
+
+  renderStickers();
+
+}
+
+
+/* ==========================================
+   스티커 표시
+========================================== */
+
+function renderStickers() {
+
+  memoBoard.querySelectorAll('.sticker')
+    .forEach(el => el.remove());
+
+
+  stickers.forEach(sticker => {
+
+    const el = document.createElement('div');
+
+    el.className = 'sticker';
+
+    el.dataset.id = sticker.id;
+
+    el.textContent = sticker.emoji;
+
+
+    el.style.left = sticker.x + 'px';
+
+    el.style.top = sticker.y + 'px';
+
+    el.style.fontSize = sticker.size + 'px';
+
+
+    el.style.setProperty(
+
+      'z-index',
+
+      String(Number(sticker.zIndex) || 1),
+
+      'important'
+
+    );
+
+
+    el.style.transform =
+      `rotate(${sticker.rotation || 0}deg)`;
+
+
+    memoBoard.appendChild(el);
+
+    setupStickerDrag(el, sticker);
+
+    setupStickerControls(el, sticker);
+
+  });
+
+}
+
+
+/* ==========================================
+   스티커 이동
+========================================== */
+
+function setupStickerDrag(el, sticker) {
+
+  let startX = 0;
+  let startY = 0;
+
+  let originalX = 0;
+  let originalY = 0;
+
+  let dragging = false;
+
+
+  el.addEventListener('pointerdown', e => {
+
+    if (e.button !== 0) return;
+
+    if (e.target.closest('.sticker-controls')) return;
+
+
+    dragging = true;
+
+    startX = e.clientX;
+    startY = e.clientY;
+
+    originalX = sticker.x;
+    originalY = sticker.y;
+
+
+    bringToFront(el, sticker);
+
+    el.setPointerCapture(e.pointerId);
+
+  });
+
+
+  el.addEventListener('pointermove', e => {
+
+    if (!dragging) return;
+
+
+    sticker.x = Math.max(
+      0,
+      originalX + e.clientX - startX
+    );
+
+    sticker.y = Math.max(
+      0,
+      originalY + e.clientY - startY
+    );
+
+
+    el.style.left = sticker.x + 'px';
+
+    el.style.top = sticker.y + 'px';
+
+  });
+
+
+  function stopDragging() {
+
+    if (!dragging) return;
+
+    dragging = false;
+
+    saveStickers();
+
+  }
+
+
+  el.addEventListener('pointerup', stopDragging);
+
+  el.addEventListener('pointercancel', stopDragging);
+
+}
+
+
+/* ==========================================
+   스티커 조작 버튼
+========================================== */
+
+function setupStickerControls(el, sticker) {
+
+  const controls = document.createElement('div');
+
+  controls.className = 'sticker-controls';
+
+
+  const smaller = document.createElement('button');
+
+  smaller.textContent = '−';
+
+  smaller.title = '작게';
+
+
+  const bigger = document.createElement('button');
+
+  bigger.textContent = '+';
+
+  bigger.title = '크게';
+
+
+  const rotate = document.createElement('button');
+
+  rotate.textContent = '↻';
+
+  rotate.title = '회전';
+
+
+  const remove = document.createElement('button');
+
+  remove.textContent = '×';
+
+  remove.title = '삭제';
+
+
+  controls.addEventListener('pointerdown', e => {
+
+    e.stopPropagation();
+
+  });
+
+
+  smaller.addEventListener('click', e => {
+
+    e.stopPropagation();
+
+    sticker.size = Math.max(
+      20,
+      sticker.size - 8
+    );
+
+    el.style.fontSize = sticker.size + 'px';
+
+    saveStickers();
+
+  });
+
+
+  bigger.addEventListener('click', e => {
+
+    e.stopPropagation();
+
+    sticker.size = Math.min(
+      150,
+      sticker.size + 8
+    );
+
+    el.style.fontSize = sticker.size + 'px';
+
+    saveStickers();
+
+  });
+
+
+  rotate.addEventListener('click', e => {
+
+    e.stopPropagation();
+
+    sticker.rotation =
+      ((sticker.rotation || 0) + 15) % 360;
+
+    el.style.transform =
+      `rotate(${sticker.rotation}deg)`;
+
+    saveStickers();
+
+  });
+
+
+  remove.addEventListener('click', e => {
+
+    e.stopPropagation();
+
+    stickers = stickers.filter(
+      s => s.id !== sticker.id
+    );
+
+    saveStickers();
+
+    renderStickers();
+
+  });
+
+
+  controls.append(
+    smaller,
+    bigger,
+    rotate,
+    remove
+  );
+
+  el.appendChild(controls);
+
+}
+
+
+/* ==========================================
+   메모와 스티커 레이어 통합
+========================================== */
+
+function bringToFront(element, item) {
+
+  const allItems = [
+
+    ...memos,
+    ...stickers
+
+  ];
+
+
+  const highest = Math.max(
+
+    0,
+
+    ...allItems.map(
+      obj => Number(obj.zIndex) || 0
+    )
+
+  );
+
+
+  const nextIndex = highest + 1;
+
+  item.zIndex = nextIndex;
+
+
+  element.style.setProperty(
+
+    'z-index',
+
+    String(nextIndex),
+
+    'important'
+
+  );
+
+
+  saveMemos();
+
+  saveStickers();
+
+}
+
+
+/* ==========================================
+   레이어 정리
+========================================== */
+
+function normalizeLayers() {
+
+  const allItems = [
+
+    ...memos,
+    ...stickers
+
+  ];
+
+
+  allItems.sort((a, b) => {
+
+    return (
+      (Number(a.zIndex) || 0) -
+      (Number(b.zIndex) || 0)
+    );
+
+  });
+
+
+  allItems.forEach((item, index) => {
+
+    item.zIndex = index + 1;
+
+  });
+
+
+  saveMemos();
+
+  saveStickers();
+
+}
+
+
+/* ==========================================
    초기 실행
+   반드시 모든 변수 선언 이후에 실행
 ========================================== */
 
 async function initializeSite() {
+
+  normalizeLayers();
 
   renderMemos();
 
@@ -991,304 +1700,8 @@ async function initializeSite() {
 }
 
 
-initializeSite();
-/* ==========================================
-   이모지 스티커 선택 기능
-========================================== */
+initializeSite().catch(error => {
 
-const emojiPicker = document.getElementById('emoji-picker');
-const emojiList = document.getElementById('emoji-list');
-const emojiSearch = document.getElementById('emoji-search');
+  console.error('사이트 초기화 오류:', error);
 
-const emojiCategories = {
-  얼굴: '😀 😃 😄 😁 😆 😅 😂 🤣 🥲 🥹 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😗 😙 😚 😋 😛 😜 🤪 😝 🤑 🤗 🤭 🫢 🫣 🤫 🤔 🫡 🤐 🤨 😐 😑 😶 🫥 😏 😒 🙄 😬 😮‍💨 🤥 😌 😔 😪 🤤 😴 😷 🤒 🤕 🤢 🤮 🤧 🥵 🥶 🥴 😵 🤯 🤠 🥳 🥸 😎 🤓 🧐 😕 🫤 😟 🙁 ☹️ 😮 😯 😲 😳 🥺 😦 😧 😨 😰 😥 😢 😭 😱 😖 😣 😞 😓 😩 😫 🥱 😤 😡 😠 🤬 😈 👿 💀 ☠️ 💩 🤡 👻 👽 👾 🤖 🎃',
-  동물: '🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐻‍❄️ 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐒 🐔 🐧 🐦 🐤 🐣 🦆 🦅 🦉 🦇 🐺 🐗 🐴 🦄 🐝 🪱 🦋 🐌 🐞 🐜 🪰 🪲 🪳 🦟 🦗 🕷️ 🦂 🐢 🐍 🦎 🦖 🦕 🐙 🦑 🦐 🦞 🦀 🐡 🐠 🐟 🐬 🐳 🦈 🐊 🦭 🦦 🦥 🐘 🦣 🦛 🦏 🐪 🐫 🦒 🦘 🦬 🐃 🐂 🐄 🐎 🐖 🐏 🐑 🦙 🐐 🦌 🐕 🐩 🦮 🐈 🐓 🦃 🦚 🦜 🦢 🦩 🕊️ 🐇 🦝 🦨 🦡 🦔 🐾',
-  식물: '🌵 🎄 🌲 🌳 🌴 🪵 🌱 🌿 ☘️ 🍀 🎍 🪴 🎋 🍃 🍂 🍁 🍄 🪺 🪻 🌷 🪷 🌹 🥀 🌺 🌸 🌼 🌻 🌞',
-  음식: '🍇 🍈 🍉 🍊 🍋 🍌 🍍 🥭 🍎 🍏 🍐 🍑 🍒 🍓 🫐 🥝 🍅 🫒 🥥 🥑 🍆 🥔 🥕 🌽 🌶️ 🫑 🥒 🥬 🥦 🧄 🧅 🥜 🫘 🌰 🍞 🥐 🥖 🫓 🥨 🥯 🥞 🧇 🧀 🍖 🍗 🥩 🥓 🍔 🍟 🍕 🌭 🥪 🌮 🌯 🫔 🥙 🧆 🍳 🥚 🧈 🥞 🧂 🍿 🍱 🍘 🍙 🍚 🍛 🍜 🍝 🍠 🍢 🍣 🍤 🍥 🥮 🍡 🥟 🥠 🥡 🦪 🍦 🍧 🍨 🍩 🍪 🎂 🍰 🧁 🥧 🍫 🍬 🍭 🍮 🍯 🍼 🥛 ☕ 🍵 🧃 🥤 🧋 🍶 🍺 🍷 🥂 🍹 🧉',
-  사물: '⌚ 📱 💻 🖥️ 🖨️ ⌨️ 🖱️ 💽 💾 💿 📷 📸 📹 🎥 📺 📻 🎙️ 🎧 🎤 📢 📣 🔔 🔕 🕯️ 💡 🔦 🏮 📔 📕 📖 📗 📘 📙 📚 📓 📒 📃 📜 📰 🗞️ 🔖 🏷️ 💰 💴 💵 💶 💷 💳 💎 ⚖️ 🧸 🪆 🪄 🎀 🎁 🎈 🎉 🎊 🎏 🎐 🪩 🪅 🪆 🖼️ 🪞 🛍️',
-  기호: '❤️ 🩷 🧡 💛 💚 💙 🩵 💜 🤎 🖤 🩶 🤍 💔 ❣️💕 💞 💓 💗 💖 💘 💝 💟 ☮️ ✝️ ☯️ ✡️ 🕉️ ☸️ 🔯 🪯 ☪️ ☦️ 🛐 ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ♐ ♑ ♒ ♓ 🆔 ⚛️ 🉑 ☢️ ☣️ 📴 📳 🈶 🈚 🈸 🈺 🈷️ ✴️ 🆚 💯 🔥 ✨ ⭐ 🌟 💫 ☀️ 🌙 ☁️ 🌈 ❄️ ⚡ 💧 💦 🌊 🎵 🎶 💭 💤',
-  활동: '⚽ 🏀 🏈 ⚾ 🥎 🎾 🏐 🏉 🥏 🎱 🪀 🏓 🏸 🏒 🏑 🥍 🏏 🥅 ⛳ 🪁 🏹 🎣 🤿 🥊 🥋 🎽 🛹 🛼 🛷 ⛸️ 🥌 🎿 ⛷️ 🏂 🏋️ 🤸 🤼 🤽 🤾 🧗 🚴 🚵 🏇 🧘 🏄 🏊',
-  교통: '🚗 🚕 🚙 🚌 🚎 🏎️ 🚓 🚑 🚒 🚐 🛻 🚚 🚛 🚜 🏍️ 🛵 🚲 🛴 🛹 🚨 🚔 🚍 🚘 🚖 🚡 🚠 🚟 🚃 🚋 🚞 🚝 🚄 🚅 🚈 🚂 ✈️ 🛫 🛬 🛩️ 🚀 🛸 🚁 🛶 ⛵ 🚤 🛥️ 🛳️ 🚢 ⚓'
-};
-
-let allEmojis = [];
-
-Object.values(emojiCategories).forEach(category => {
-  allEmojis.push(...category.split(' '));
 });
-
-allEmojis = [...new Set(allEmojis)];
-
-function renderEmojiList(search = '') {
-  emojiList.innerHTML = '';
-
-  const filtered = allEmojis.filter(emoji => {
-    return !search || emoji.includes(search);
-  });
-
-  filtered.forEach(emoji => {
-    const button = document.createElement('button');
-    button.className = 'emoji-choice';
-    button.textContent = emoji;
-    button.type = 'button';
-
-    button.addEventListener('click', () => {
-      addSticker(emoji);
-      emojiPicker.classList.add('hidden');
-      emojiSearch.value = '';
-      renderEmojiList();
-    });
-
-    emojiList.appendChild(button);
-  });
-}
-
-document.getElementById('add-sticker-btn')
-  .addEventListener('click', () => {
-    emojiPicker.classList.toggle('hidden');
-    renderEmojiList();
-  });
-
-document.getElementById('close-emoji-picker')
-  .addEventListener('click', () => {
-    emojiPicker.classList.add('hidden');
-  });
-
-emojiSearch.addEventListener('input', () => {
-  renderEmojiList(emojiSearch.value.trim());
-});
-
-/* ==========================================
-   스티커 저장 및 표시
-========================================== */
-
-let stickers = JSON.parse(localStorage.getItem('stickers')) || [];
-
-let stickerZIndex = 1000;
-
-function saveStickers() {
-  localStorage.setItem('stickers', JSON.stringify(stickers));
-}
-normalizeLayers();
-
-/* 스티커 추가 */
-
-function addSticker(emoji) {
-
-  const sticker = {
-    id: Date.now() + Math.random(),
-    emoji: emoji,
-    x: 80 + Math.random() * 100,
-    y: 80 + Math.random() * 100,
-    size: 48,
-    rotation: 0,
-  zIndex: Math.max(
-  0,
-  ...memos.map(m => Number(m.zIndex) || 0),
-  ...stickers.map(s => Number(s.zIndex) || 0)
-) + 1
-  };
-
-  stickers.push(sticker);
-
-  saveStickers();
-  renderStickers();
-}
-
-
-/* 스티커 표시 */
-
-function renderStickers() {
-
-  document.querySelectorAll('.sticker').forEach(el => el.remove());
-
-  stickers.forEach(sticker => {
-
-    const el = document.createElement('div');
-
-    el.className = 'sticker';
-    el.dataset.id = sticker.id;
-    el.textContent = sticker.emoji;
-
-    el.style.left = sticker.x + 'px';
-    el.style.top = sticker.y + 'px';
-    el.style.fontSize = sticker.size + 'px';
- el.style.setProperty(
-  'z-index',
-  String(Number(sticker.zIndex) || 1),
-  'important'
-);
-    el.style.transform = `rotate(${sticker.rotation || 0}deg)`;
-
-    memoBoard.appendChild(el);
-
-    setupStickerDrag(el, sticker);
-    setupStickerControls(el, sticker);
-
-  });
-
-}
-
-
-/* 스티커 이동 */
-
-function setupStickerDrag(el, sticker) {
-
-  let startX = 0;
-  let startY = 0;
-  let originalX = 0;
-  let originalY = 0;
-  let dragging = false;
-
-  el.addEventListener('pointerdown', e => {
-
-    if (e.button !== 0) return;
-
-    if (e.target.closest('.sticker-controls')) return;
-
-    dragging = true;
-
-    startX = e.clientX;
-    startY = e.clientY;
-
-    originalX = sticker.x;
-    originalY = sticker.y;
-
-  bringToFront(el, sticker);
-
-    el.setPointerCapture(e.pointerId);
-
-  });
-
-  el.addEventListener('pointermove', e => {
-
-    if (!dragging) return;
-
-    sticker.x = Math.max(0, originalX + e.clientX - startX);
-    sticker.y = Math.max(0, originalY + e.clientY - startY);
-
-    el.style.left = sticker.x + 'px';
-    el.style.top = sticker.y + 'px';
-
-  });
-
-  function stopDragging() {
-
-    if (!dragging) return;
-
-    dragging = false;
-    saveStickers();
-
-  }
-
-  el.addEventListener('pointerup', stopDragging);
-  el.addEventListener('pointercancel', stopDragging);
-
-}
-
-
-/* 스티커 조작 버튼 */
-
-function setupStickerControls(el, sticker) {
-
-  const controls = document.createElement('div');
-  controls.className = 'sticker-controls';
-
-  const smaller = document.createElement('button');
-  smaller.textContent = '−';
-  smaller.title = '작게';
-
-  const bigger = document.createElement('button');
-  bigger.textContent = '+';
-  bigger.title = '크게';
-
-  const rotate = document.createElement('button');
-  rotate.textContent = '↻';
-  rotate.title = '회전';
-
-  const remove = document.createElement('button');
-  remove.textContent = '×';
-  remove.title = '삭제';
-
-  smaller.addEventListener('click', e => {
-    e.stopPropagation();
-    sticker.size = Math.max(20, sticker.size - 8);
-    el.style.fontSize = sticker.size + 'px';
-    saveStickers();
-  });
-
-  bigger.addEventListener('click', e => {
-    e.stopPropagation();
-    sticker.size = Math.min(150, sticker.size + 8);
-    el.style.fontSize = sticker.size + 'px';
-    saveStickers();
-  });
-
-  rotate.addEventListener('click', e => {
-    e.stopPropagation();
-    sticker.rotation = (sticker.rotation + 15) % 360;
-    el.style.transform = `rotate(${sticker.rotation}deg)`;
-    saveStickers();
-  });
-
-  remove.addEventListener('click', e => {
-    e.stopPropagation();
-
-    stickers = stickers.filter(s => s.id !== sticker.id);
-
-    saveStickers();
-    renderStickers();
-  });
-
-  controls.append(smaller, bigger, rotate, remove);
-  el.appendChild(controls);
-
-}
-
-
-/* 스티커 초기 표시 */
-
-renderStickers();
-/* ==========================================
-   메모와 스티커 레이어 통합
-========================================== */
-
-function bringToFront(element, item) {
-
-  const allItems = [
-    ...memos,
-    ...stickers
-  ];
-
-  const highest = Math.max(
-    0,
-    ...allItems.map(obj => Number(obj.zIndex) || 0)
-  );
-
-  const nextIndex = highest + 1;
-
-  item.zIndex = nextIndex;
-
-  element.style.setProperty(
-    'z-index',
-    String(nextIndex),
-    'important'
-  );
-
-  saveMemos();
-  saveStickers();
-}
-function normalizeLayers() {
-  const allItems = [...memos, ...stickers];
-
-  allItems.sort((a, b) => {
-    return (Number(a.zIndex) || 0) - (Number(b.zIndex) || 0);
-  });
-
-  allItems.forEach((item, index) => {
-    item.zIndex = index + 1;
-  });
-
-  saveMemos();
-  saveStickers();
-}

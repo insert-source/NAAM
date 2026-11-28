@@ -2109,13 +2109,22 @@ function applyBoardTransform() {
     `translate(${boardPanX}px, ${boardPanY}px)
      scale(${boardScale})`;
 
+  // 격자 크기를 확대 비율에 맞춰 변경
+  const gridSize = 24 * boardScale;
+
+  boardViewport.style.backgroundSize =
+    `${gridSize}px ${gridSize}px`;
+
+  // 격자 배경도 게시판과 함께 이동
+  boardViewport.style.backgroundPosition =
+    `${boardPanX}px ${boardPanY}px`;
+
   document.getElementById(
     'board-zoom-level'
   ).textContent =
     Math.round(boardScale * 100) + '%';
 
 }
-
 
 /* ==========================================
    확대 범위 제한
@@ -2535,37 +2544,21 @@ function getBoardCenterPosition(
   objectHeight = 185
 ) {
 
-  const x =
-    (
-      boardViewport.clientWidth / 2 -
-      boardPanX
-    ) / boardScale -
-    objectWidth / 2;
-
-  const y =
-    (
-      boardViewport.clientHeight / 2 -
-      boardPanY
-    ) / boardScale -
-    objectHeight / 2;
-
   return {
 
-    x: Math.max(
-      0,
-      Math.min(
-        BOARD_WIDTH - objectWidth,
-        x
-      )
-    ),
+    x:
+      (
+        boardViewport.clientWidth / 2 -
+        boardPanX
+      ) / boardScale -
+      objectWidth / 2,
 
-    y: Math.max(
-      0,
-      Math.min(
-        BOARD_HEIGHT - objectHeight,
-        y
-      )
-    )
+    y:
+      (
+        boardViewport.clientHeight / 2 -
+        boardPanY
+      ) / boardScale -
+      objectHeight / 2
 
   };
 

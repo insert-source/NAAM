@@ -2735,3 +2735,377 @@ textarea::placeholder {
     animation: none;
   }
 }
+/* ==========================================
+   호텔 게시판 — 밝은 린넨 질감
+========================================== */
+
+#memo-board {
+  background: #e4d7bf !important;
+
+  /* 린넨 원단 질감 */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(110, 90, 60, 0.035) 0px,
+      rgba(110, 90, 60, 0.035) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(110, 90, 60, 0.035) 0px,
+      rgba(110, 90, 60, 0.035) 1px,
+      transparent 1px,
+      transparent 4px
+    ) !important;
+
+  border: 12px solid #9c8060 !important;
+  outline: 2px solid #c5ad85 !important;
+  border-radius: 3px;
+
+  box-shadow:
+    inset 0 0 0 2px #c5ad85,
+    inset 0 0 25px rgba(100, 80, 50, 0.12),
+    0 5px 0 #806448,
+    0 10px 25px rgba(80, 60, 40, 0.12)
+    !important;
+
+  isolation: isolate;
+}
+
+/* 기존 어두운 오버레이 제거 */
+
+#memo-board::before,
+#memo-board::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* 게시판 주변 영역 */
+
+#memo-page,
+.memo-toolbar,
+.memo-board-container,
+.memo-board-wrapper {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+@media (max-width: 600px) {
+  #memo-board {
+    border-width: 7px !important;
+  }
+}
+/* ==========================================
+   LUCKY DRAW — LIGHT HOTEL
+========================================== */
+
+/* 럭키드로우 전체 영역 */
+
+#random-page {
+  background: transparent !important;
+  background-image: none !important;
+  color: #51483c !important;
+}
+
+/* 추첨기 및 주변 패널 */
+
+#random-page .card,
+#random-page .panel,
+#random-page .section,
+#random-page .random-section,
+#random-page .draw-section,
+#random-page .draw-container,
+#random-page .random-container,
+#random-page .history-section,
+#random-page .admin-section {
+  background: #faf7ef !important;
+  background-image: none !important;
+  color: #51483c !important;
+
+  border: 1px solid #d4c19f;
+  box-shadow: 0 4px 12px rgba(80, 60, 40, 0.06);
+}
+
+/* 추첨기 본체 */
+
+#draw-result {
+  background: linear-gradient(
+    145deg,
+    #fdf9ef,
+    #e8dac0
+  ) !important;
+
+  color: #685338 !important;
+
+  border: 8px solid #b49a6c !important;
+  outline: 1px solid #927653;
+
+  text-shadow: none !important;
+
+  box-shadow:
+    inset 0 0 0 2px #eee0c5,
+    inset 0 0 20px rgba(100, 80, 50, 0.08),
+    0 5px 0 #927653,
+    0 10px 20px rgba(80, 60, 40, 0.1)
+    !important;
+}
+
+/* 추첨기 상하단 장식 */
+
+#draw-result::before,
+#draw-result::after {
+  background: transparent !important;
+  color: #9c825c !important;
+  text-shadow: none !important;
+}
+
+/* 슬롯머신 내부 */
+
+#draw-result .slot-window {
+  background: #fffaf0 !important;
+  background-image: none !important;
+
+  border-top: 1px solid #c5ad85;
+  border-bottom: 1px solid #c5ad85;
+
+  box-shadow:
+    inset 0 3px 12px rgba(100, 80, 50, 0.08);
+}
+
+#draw-result .slot-window::before {
+  background: linear-gradient(
+    to bottom,
+    #fffaf0,
+    transparent
+  ) !important;
+}
+
+#draw-result .slot-window::after {
+  background: linear-gradient(
+    to top,
+    #fffaf0,
+    transparent
+  ) !important;
+}
+
+#draw-result .slot-item,
+#draw-result span {
+  color: #685338 !important;
+  text-shadow: none !important;
+}
+
+/* 제목 및 설명 */
+
+#random-page h2,
+#random-page h3,
+#random-page h4 {
+  color: #756044 !important;
+}
+
+#draw-description,
+#draw-status {
+  color: #8a795e !important;
+}
+
+/* 관리자 영역과 추첨 기록 */
+
+#admin-controls,
+#item-list,
+#draw-history {
+  background: #faf7ef !important;
+  background-image: none !important;
+
+  color: #51483c !important;
+  border: 1px solid #d4c19f;
+}
+
+/* 추첨 기록 개별 항목 */
+
+#draw-history .history-item {
+  background: #fffdf7 !important;
+  background-image: none !important;
+
+  color: #685338 !important;
+  border: none;
+  border-bottom: 1px solid #e1d5bf;
+}
+
+#draw-history .history-item strong {
+  color: #685338 !important;
+}
+
+#draw-history .history-item span {
+  color: #99876b !important;
+}
+
+/* 등록된 아이템 */
+
+#item-list .item-tag {
+  background: #eee5d3 !important;
+  color: #685338 !important;
+
+  border: 1px solid #cdb895;
+  border-radius: 3px;
+
+  box-shadow: none;
+}
+
+#item-list .item-tag button {
+  background: transparent !important;
+  color: #947b59 !important;
+}
+
+/* 추첨 버튼 */
+
+#draw-btn {
+  background: linear-gradient(
+    180deg,
+    #eddfbe,
+    #c7aa78
+  ) !important;
+
+  color: #59472f !important;
+  text-shadow: none !important;
+
+  border: 1px solid #ad9368;
+}
+
+#draw-btn:disabled {
+  opacity: 0.7;
+}
+
+/* 기록 삭제 버튼 */
+
+#clear-history-btn {
+  background: #f4e6df !important;
+  color: #9c6556 !important;
+  border: 1px solid #d4b6a8;
+}
+
+/* 당첨 시 황금빛 테두리 */
+
+#draw-result.revealed {
+  border-color: #c7a461 !important;
+  outline-color: #d5b679 !important;
+}
+/* 클래식 호텔 — 딥그린 포인트 */
+
+:root {
+  --hotel-green: #233d35;
+  --hotel-gold: #b49a6c;
+  --hotel-cream: #f5f2eb;
+}
+
+/* 탭 메뉴 */
+
+.tabs {
+  background: #233d35 !important;
+  border-bottom: 3px double #b49a6c;
+}
+
+.tab {
+  background: transparent !important;
+  color: #c8cbbf !important;
+}
+
+.tab.active {
+  background: #354e44 !important;
+  color: #e5cfa1 !important;
+}
+
+.tab:hover {
+  background: #354e44 !important;
+  color: #f5e5c4 !important;
+}
+
+/* 게시판 명패 */
+
+#memo-page::before,
+#random-page::before {
+  background: #233d35 !important;
+  color: #e5cfa1 !important;
+  border: 3px double #b49a6c;
+}
+
+/* 게시판 버튼 */
+
+#add-memo-btn,
+#add-sticker-btn,
+#admin-login-btn,
+#add-item-btn,
+#save-memo-btn,
+#login-submit-btn {
+  background: #233d35 !important;
+  color: #f1e4c9 !important;
+  border: 1px solid #b49a6c;
+}
+
+#add-memo-btn:hover,
+#add-sticker-btn:hover,
+#admin-login-btn:hover,
+#add-item-btn:hover,
+#save-memo-btn:hover,
+#login-submit-btn:hover {
+  background: #354e44 !important;
+}
+
+/* 추첨기 본체 */
+
+#draw-result {
+  background: linear-gradient(
+    145deg,
+    #354e44,
+    #233d35
+  ) !important;
+
+  border: 8px solid #b49a6c !important;
+  color: #e5cfa1 !important;
+
+  box-shadow:
+    inset 0 0 0 2px #d6bd86,
+    0 5px 0 #927653,
+    0 10px 20px rgba(60, 50, 30, 0.15)
+    !important;
+}
+
+#draw-result::before,
+#draw-result::after,
+#draw-result span {
+  color: #e5cfa1 !important;
+}
+
+/* 슬롯머신 내부는 밝게 유지 */
+
+#draw-result .slot-window {
+  background: #faf5e9 !important;
+}
+
+#draw-result .slot-item {
+  color: #233d35 !important;
+}
+
+/* 제목 */
+
+#random-page h2,
+#random-page h3,
+#memo-page h2 {
+  color: #233d35 !important;
+}
+
+/* 등록 아이템 */
+
+#item-list .item-tag {
+  background: #e5ebe3 !important;
+  color: #233d35 !important;
+  border: 1px solid #b5c1b2;
+}
+
+/* 팝업 테두리 */
+
+.modal-content,
+.modal-box,
+#emoji-picker {
+  border: 3px double #b49a6c;
+  background: #fffdf7 !important;
+}

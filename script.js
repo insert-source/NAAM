@@ -209,11 +209,7 @@ function renderMemos() {
     card.append(content, date, actions);
 
 
-    card.addEventListener('pointerdown', () => {
-
-      bringToFront(card, memo);
-
-    });
+   
 
 
     memoBoard.appendChild(card);
@@ -458,7 +454,7 @@ function setupMemoDrag(card, memo) {
     originalX = memo.x ?? 15;
     originalY = memo.y ?? 15;
 
-    bringToFront(card, memo);
+ 
 
     card.setPointerCapture(e.pointerId);
 
@@ -1648,15 +1644,25 @@ function bringToFront(element, item) {
 
 function normalizeLayers() {
 
-  const allItems = [
+  // 메모를 최초 작성 시간순으로 정렬
+  memos.sort((a, b) => {
 
-    ...memos,
-    ...stickers
+    return (
+      Number(a.createdAt || a.id) -
+      Number(b.createdAt || b.id)
+    );
 
-  ];
+  });
 
+  // 오래된 메모부터 아래쪽에 배치
+  memos.forEach((memo, index) => {
 
-  allItems.sort((a, b) => {
+    memo.zIndex = index + 1;
+
+  });
+
+  // 스티커는 기존 레이어 순서 유지
+  stickers.sort((a, b) => {
 
     return (
       (Number(a.zIndex) || 0) -
@@ -1665,16 +1671,13 @@ function normalizeLayers() {
 
   });
 
+  stickers.forEach((sticker, index) => {
 
-  allItems.forEach((item, index) => {
-
-    item.zIndex = index + 1;
+    sticker.zIndex = memos.length + index + 1;
 
   });
 
-
   saveMemos();
-
   saveStickers();
 
 }

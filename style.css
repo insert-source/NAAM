@@ -1759,3 +1759,33 @@ select:focus {
   }
 
 }
+/* 무한 격자 배경 */
+
+#board-viewport {
+  background-color: #e4d7bf;
+
+  background-image:
+    linear-gradient(
+      rgba(110, 90, 60, 0.12) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(110, 90, 60, 0.12) 1px,
+      transparent 1px
+    );
+
+  background-size: 24px 24px;
+  background-repeat: repeat;
+}
+
+
+/* 게시판 자체의 배경 및 경계 제거 */
+
+#memo-board {
+  background: transparent !important;
+  background-image: none !important;
+
+  box-shadow: none !important;
+  overflow: visible !important;
+}

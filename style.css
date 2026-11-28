@@ -3109,3 +3109,439 @@ textarea::placeholder {
   border: 3px double #b49a6c;
   background: #fffdf7 !important;
 }
+/* ==========================================
+   기존 다크모드 배경 제거
+========================================== */
+
+:root {
+  color-scheme: light !important;
+}
+
+html,
+body {
+  background: #f5f2eb !important;
+  color: #51483c !important;
+}
+
+/* 페이지 내부의 기존 회색 배경 초기화 */
+
+#memo-page,
+#random-page,
+#memo-page div,
+#random-page div,
+#memo-page section,
+#random-page section {
+  background-color: transparent !important;
+  background-image: none !important;
+  color: #51483c;
+}
+
+/* 제목 및 안내 문구 */
+
+#memo-page h1,
+#memo-page h2,
+#memo-page h3,
+#random-page h1,
+#random-page h2,
+#random-page h3 {
+  color: #233d35 !important;
+}
+
+#memo-page p,
+#random-page p {
+  color: #857761;
+}
+
+/* ==========================================
+   게시판
+========================================== */
+
+#memo-board {
+  background: #e4d7bf !important;
+
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(100, 80, 50, 0.04) 0px,
+      rgba(100, 80, 50, 0.04) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(100, 80, 50, 0.04) 0px,
+      rgba(100, 80, 50, 0.04) 1px,
+      transparent 1px,
+      transparent 4px
+    ) !important;
+
+  border: 12px solid #9c8060 !important;
+  outline: 2px solid #c5ad85 !important;
+
+  box-shadow:
+    inset 0 0 0 2px #c5ad85,
+    inset 0 0 20px rgba(100, 80, 50, 0.1),
+    0 5px 0 #806448,
+    0 10px 20px rgba(80, 60, 40, 0.1)
+    !important;
+}
+
+#memo-board::before,
+#memo-board::after {
+  display: none !important;
+}
+
+/* 메모지 색상 복원 */
+
+#memo-board .memo.yellow {
+  background: #f8edc8 !important;
+}
+
+#memo-board .memo.pink {
+  background: #f1dcd6 !important;
+}
+
+#memo-board .memo.blue {
+  background: #dce7ed !important;
+}
+
+#memo-board .memo.green {
+  background: #e1e8d4 !important;
+}
+
+#memo-board .memo.purple {
+  background: #e7dfea !important;
+}
+
+#memo-board .memo.orange {
+  background: #f0ddc7 !important;
+}
+
+/* ==========================================
+   럭키드로우
+========================================== */
+
+/* 추첨기 본체는 딥그린 유지 */
+
+#draw-result {
+  background: linear-gradient(
+    145deg,
+    #354e44,
+    #233d35
+  ) !important;
+
+  color: #e5cfa1 !important;
+
+  border: 8px solid #b49a6c !important;
+
+  box-shadow:
+    inset 0 0 0 2px #d6bd86,
+    0 5px 0 #927653,
+    0 10px 20px rgba(60, 50, 30, 0.15)
+    !important;
+}
+
+#draw-result span,
+#draw-result::before,
+#draw-result::after {
+  color: #e5cfa1 !important;
+}
+
+/* 슬롯머신 */
+
+#draw-result .slot-window {
+  background: #faf5e9 !important;
+}
+
+#draw-result .slot-item {
+  color: #233d35 !important;
+}
+
+/* 추첨 기록과 아이템 목록 */
+
+#draw-history,
+#item-list,
+#admin-controls {
+  background: #fffdf7 !important;
+  border: 1px solid #d4c19f;
+}
+
+#draw-history .history-item {
+  background: #fffdf7 !important;
+  border-bottom: 1px solid #e1d5bf;
+}
+
+#item-list .item-tag {
+  background: #e5ebe3 !important;
+  color: #233d35 !important;
+  border: 1px solid #b5c1b2;
+}
+
+/* ==========================================
+   버튼 색상 통일
+========================================== */
+
+#add-memo-btn,
+#add-sticker-btn,
+#admin-login-btn,
+#add-item-btn,
+#save-memo-btn,
+#login-submit-btn {
+  background: #233d35 !important;
+  color: #f1e4c9 !important;
+  border: 1px solid #b49a6c !important;
+}
+
+#draw-btn {
+  background: linear-gradient(
+    180deg,
+    #eddfbe,
+    #c7aa78
+  ) !important;
+
+  color: #59472f !important;
+}
+
+/* 이모지 선택창 */
+
+#emoji-picker {
+  background: #fffdf7 !important;
+  border: 2px solid #b49a6c;
+}
+
+#emoji-picker .emoji-choice {
+  background: #f5f2eb !important;
+}
+
+/* 스티커 조작 버튼 */
+
+#memo-board .sticker-controls {
+  background: #233d35 !important;
+}
+
+#memo-board .sticker-controls button {
+  color: #e5cfa1 !important;
+}
+
+/* 모바일 */
+
+@media (max-width: 600px) {
+  #memo-board {
+    border-width: 7px !important;
+  }
+
+  #draw-result {
+    border-width: 5px !important;
+  }
+}
+/* ==========================================
+   호텔 테마 — 텍스트 가독성 개선
+========================================== */
+
+body {
+  color: #39352d !important;
+  font-size: 15px;
+}
+
+/* 페이지 제목 */
+
+#memo-page h1,
+#memo-page h2,
+#memo-page h3,
+#random-page h1,
+#random-page h2,
+#random-page h3,
+.page-title,
+.section-title {
+  color: #233d35 !important;
+  font-weight: 700;
+  text-shadow: none !important;
+}
+
+/* 일반 텍스트 및 안내 문구 */
+
+#memo-page p,
+#random-page p,
+#memo-page label,
+#random-page label,
+.page-description,
+.subtitle,
+.description,
+.hint,
+.sticker-hint,
+.section-description {
+  color: #62594b !important;
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+/* 메모지 본문 */
+
+#memo-board .memo p {
+  color: #39352d !important;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+#memo-board .memo-date {
+  color: #756650 !important;
+  font-size: 11px;
+  opacity: 1 !important;
+}
+
+/* 메모 수정 및 삭제 */
+
+.memo-actions button {
+  color: #62533e !important;
+  font-weight: 600;
+}
+
+/* 상단 메뉴 */
+
+.tab {
+  color: #e1dacb !important;
+  font-weight: 600;
+  opacity: 1 !important;
+}
+
+.tab.active,
+.tab:hover {
+  color: #ffe1a5 !important;
+}
+
+/* 녹색 버튼 */
+
+#add-memo-btn,
+#add-sticker-btn,
+#admin-login-btn,
+#add-item-btn,
+#save-memo-btn,
+#login-submit-btn {
+  color: #fff1d5 !important;
+  font-size: 13px;
+  font-weight: 600;
+  text-shadow: none !important;
+}
+
+/* 추첨기 내부 */
+
+#draw-result {
+  color: #ffe0a3 !important;
+  font-weight: 600;
+}
+
+#draw-result span {
+  color: #ffe0a3 !important;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+#draw-result::before,
+#draw-result::after {
+  color: #f2d49b !important;
+  opacity: 1 !important;
+}
+
+/* 슬롯머신 아이템 */
+
+#draw-result .slot-item {
+  color: #233d35 !important;
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 700;
+}
+
+/* 추첨 안내 및 상태 */
+
+#draw-description,
+#draw-status {
+  color: #62533e !important;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 1 !important;
+}
+
+#draw-btn {
+  color: #493a25 !important;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* 아이템 목록 */
+
+#item-list,
+#item-list .item-tag,
+#item-list .item-tag span {
+  color: #233d35 !important;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 추첨 기록 */
+
+#draw-history {
+  color: #51483c !important;
+}
+
+#draw-history .history-item strong {
+  color: #233d35 !important;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+#draw-history .history-item span {
+  color: #756650 !important;
+  font-size: 12px;
+  opacity: 1 !important;
+}
+
+/* 팝업 */
+
+.modal-content,
+.modal-box {
+  color: #39352d !important;
+}
+
+.modal-content h2,
+.modal-box h2 {
+  color: #233d35 !important;
+}
+
+/* 입력창 */
+
+input,
+textarea,
+select {
+  color: #39352d !important;
+  font-size: 14px;
+  opacity: 1 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #8b806e !important;
+  opacity: 1 !important;
+}
+
+/* 삭제 버튼 */
+
+#clear-history-btn {
+  color: #8c493b !important;
+  font-weight: 600;
+}
+
+/* 모바일 가독성 */
+
+@media (max-width: 600px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  #draw-result span {
+    font-size: 24px;
+  }
+}

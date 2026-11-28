@@ -966,28 +966,201 @@ if (drawButton) {
 }
 
 
+/* ==========================================
+   슬롯머신 애니메이션
+========================================== */
+
+async function animateSlot(resultBox, items, prize) {
+
+  const names = items.filter(
+    name => typeof name === 'string' && name.trim()
+  );
+
+  if (!names.includes(prize)) {
+    names.push(prize);
+  }
+
+  if (
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    resultBox.textContent = '';
+
+    const span = document.createElement('span');
+    span.textContent = prize;
+
+    resultBox.appendChild(span);
+    return;
+  }
+
+  resultBox.innerHTML = '';
+
+  const slotWindow = document.createElement('div');
+
+  slotWindow.className = 'slot-window';
+
+  resultBox.appendChild(slotWindow);
+
+
+  function createItem(name) {
+
+    const item = document.createElement('div');
+
+    item.className = 'slot-item';
+    item.textContent = name;
+
+    return item;
+
+  }
+
+
+  let currentItem = createItem(
+    names[Math.floor(Math.random() * names.length)]
+  );
+
+  slotWindow.appendChild(currentItem);
+
+
+  /* 처음에는 빠르게, 마지막에는 느리게 */
+
+  const durations = [
+    65, 65, 65, 65, 65,
+    65, 65, 65, 65, 65,
+    65, 65, 65, 65, 65,
+    70, 75, 85, 100, 120,
+    150, 190, 240, 320, 450
+  ];
+
+
+  for (let i = 0; i < durations.length; i++) {
+
+    const isLast = i === durations.length - 1;
+
+    const candidates = names.filter(
+      name => name !== currentItem.textContent
+    );
+
+    const pool = candidates.length
+      ? candidates
+      : names;
+
+    const nextName = isLast
+      ? prize
+      : pool[Math.floor(Math.random() * pool.length)];
+
+    const nextItem = createItem(nextName);
+
+    slotWindow.appendChild(nextItem);
+
+
+    const options = {
+
+      duration: durations[i],
+
+      easing: isLast
+        ? 'cubic-bezier(0.15, 0.7, 0.25, 1)'
+        : 'linear',
+
+      fill: 'forwards'
+
+    };
+
+
+    /* 기존 아이템은 아래로 이동 */
+
+    const outgoing = currentItem.animate(
+      [
+        { transform: 'translateY(0)' },
+        { transform: 'translateY(100%)' }
+      ],
+      options
+    );
+
+
+    /* 다음 아이템은 위에서 내려옴 */
+
+    const incoming = nextItem.animate(
+      [
+        { transform: 'translateY(-100%)' },
+        { transform: 'translateY(0)' }
+      ],
+      options
+    );
+
+
+    await Promise.all([
+      outgoing.finished,
+      incoming.finished
+    ]);
+
+
+    currentItem.remove();
+
+    nextItem.style.transform = 'translateY(0)';
+
+    incoming.cancel();
+
+    currentItem = nextItem;
+
+  }
+
+}
+
+
+/* ==========================================
+   랜덤 뽑기
+========================================== */
+
 async function drawPrize() {
 
   const button = document.getElementById('draw-btn');
 
   const resultBox = document.getElementById('draw-result');
 
-  const description =
-    document.getElementById('draw-description');
+  const description = document.getElementById('draw-description');
 
-  const status =
-    document.getElementById('draw-status');
+  const status = document.getElementById('draw-status');
+
+
+  if (button.disabled) return;
 
 
   button.disabled = true;
-resultBox.classList.remove('revealed');
-resultBox.classList.add('drawing');
-  button.textContent = '뽑는 중...';
+
+  button.textContent = '추첨 중...';
 
   status.textContent = '';
 
+  resultBox.classList.remove('revealed');
+
+  resultBox.classList.add('drawing');
+
 
   try {
+
+    /* 등록된 아이템 목록 불러오기 */
+
+    const { data: itemData, error: itemError } =
+      await supabaseClient
+        .from('random_items')
+        .select('name');
+
+
+    if (itemError) {
+
+      throw new Error(
+        '아이템 목록을 불러오지 못했습니다: '
+        + itemError.message
+      );
+
+    }
+
+
+    const itemNames = (itemData || []).map(
+      item => item.name
+    );
+
+
+    /* 실제 당첨 결과는 서버에서 결정 */
 
     const { data, error } =
       await supabaseClient.functions.invoke(
@@ -1002,9 +1175,7 @@ resultBox.classList.add('drawing');
 
 
     if (error) {
-
       throw error;
-
     }
 
 
@@ -1038,22 +1209,77 @@ resultBox.classList.add('drawing');
 
     const prize = data.prize_name;
 
-    resultBox.innerHTML = '';
+
+    /* 슬롯머신 회전 */
+
+    description.textContent =
+      '오늘의 선물을 추첨하고 있습니다.';
+
+    status.textContent =
+      'PLEASE WAIT...';
 
 
-    const span = document.createElement('span');
+    try {
 
-    span.textContent = prize;
+      await animateSlot(
+        resultBox,
+        itemNames,
+        prize
+      );
 
-    resultBox.appendChild(span);
+    } catch (animationError) {
 
-resultBox.classList.remove('drawing');
-resultBox.classList.add('revealed');
+      console.error(animationError);
+
+      // 애니메이션 실패 시에도 당첨 결과 표시
+      resultBox.textContent = '';
+
+      const span = document.createElement('span');
+      span.textContent = prize;
+
+      resultBox.appendChild(span);
+
+    }
+
+
+    /* 당첨 결과 표시 */
+
+    resultBox.classList.remove('drawing');
+
+    resultBox.classList.add('revealed');
+
+
     description.textContent =
       '오늘 선택된 물건은 ' + prize + ' 입니다.';
 
-    status.textContent = '오늘의 뽑기를 완료했어!';
 
+    status.textContent =
+      '✦ 오늘의 뽑기를 완료했어! ✦';
+
+
+    await loadHistory();
+
+
+  } catch (error) {
+
+    console.error('추첨 오류:', error);
+
+    status.textContent =
+      '추첨 오류: ' +
+      (error.message || '다시 시도해 줘.');
+
+
+  } finally {
+
+    resultBox.classList.remove('drawing');
+
+    button.disabled = false;
+
+    button.textContent = '물건 뽑기';
+
+  }
+
+}
 
     await loadHistory();
 

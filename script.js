@@ -980,7 +980,8 @@ async function drawPrize() {
 
 
   button.disabled = true;
-
+resultBox.classList.remove('revealed');
+resultBox.classList.add('drawing');
   button.textContent = '뽑는 중...';
 
   status.textContent = '';
@@ -1046,7 +1047,8 @@ async function drawPrize() {
 
     resultBox.appendChild(span);
 
-
+resultBox.classList.remove('drawing');
+resultBox.classList.add('revealed');
     description.textContent =
       '오늘 선택된 물건은 ' + prize + ' 입니다.';
 
@@ -1065,14 +1067,15 @@ async function drawPrize() {
       (error.message || '다시 시도해 줘.');
 
 
-  } finally {
+ } finally {
 
-    button.disabled = false;
+  resultBox.classList.remove('drawing');
 
-    button.textContent = '물건 뽑기';
+  button.disabled = false;
 
-  }
+  button.textContent = '물건 뽑기';
 
+}
 }
 
 

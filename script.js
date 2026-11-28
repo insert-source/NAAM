@@ -1422,7 +1422,7 @@ function setupStickerDrag(el, sticker) {
     originalY = sticker.y;
 
 
-    bringToFront(el, sticker);
+
 
     el.setPointerCapture(e.pointerId);
 
@@ -1644,8 +1644,13 @@ function bringToFront(element, item) {
 
 function normalizeLayers() {
 
-  // 메모를 최초 작성 시간순으로 정렬
-  memos.sort((a, b) => {
+  const allItems = [
+    ...memos,
+    ...stickers
+  ];
+
+  // 메모와 스티커를 최초 생성 시간순으로 정렬
+  allItems.sort((a, b) => {
 
     return (
       Number(a.createdAt || a.id) -
@@ -1654,26 +1659,10 @@ function normalizeLayers() {
 
   });
 
-  // 오래된 메모부터 아래쪽에 배치
-  memos.forEach((memo, index) => {
+  // 오래된 것은 뒤로, 최신 것은 앞으로
+  allItems.forEach((item, index) => {
 
-    memo.zIndex = index + 1;
-
-  });
-
-  // 스티커는 기존 레이어 순서 유지
-  stickers.sort((a, b) => {
-
-    return (
-      (Number(a.zIndex) || 0) -
-      (Number(b.zIndex) || 0)
-    );
-
-  });
-
-  stickers.forEach((sticker, index) => {
-
-    sticker.zIndex = memos.length + index + 1;
+    item.zIndex = index + 1;
 
   });
 

@@ -99,8 +99,7 @@ card.style.setProperty(
 );
 
 
-    const title = document.createElement('h3');
-    title.textContent = memo.title;
+    
 
     const content = document.createElement('p');
     content.textContent = memo.content;
@@ -143,7 +142,7 @@ card.style.setProperty(
 
     actions.append(editBtn, deleteBtn);
 
-    card.append(title, content, date, actions);
+  card.append(content, date, actions);
 card.addEventListener('pointerdown', () => {
   bringToFront(card, memo);
 });
@@ -264,7 +263,15 @@ document.getElementById('save-memo-btn')
 
         color: selectedColor,
 
-        date: new Date().toLocaleDateString('ko-KR'),
+   date: new Date().toLocaleString('ko-KR', {
+  timeZone: 'Asia/Seoul',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false
+}),
 
         x: Math.max(10, (boardWidth - 240) / 2 + offset % 150),
 

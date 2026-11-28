@@ -1097,3 +1097,878 @@ body {
 .sticker {
   isolation: isolate;
 }
+/* ==========================================
+   NAAM HOTEL
+   CLASSIC HOTEL EDITION
+========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap');
+
+:root {
+  --hotel-green: #203b32;
+  --hotel-green-dark: #142a23;
+  --hotel-gold: #b79a63;
+  --hotel-gold-light: #dfc99b;
+  --hotel-cream: #f5f1e8;
+  --hotel-walnut: #49382d;
+  --hotel-text: #39372f;
+}
+
+/* ==========================================
+   전체 배경
+========================================== */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #eae5da;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 79px,
+      rgba(100, 80, 50, 0.025) 80px
+    );
+  color: var(--hotel-text);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   호텔 헤더
+========================================== */
+
+header,
+.header {
+  position: relative;
+  background: var(--hotel-green);
+  color: var(--hotel-gold-light);
+  padding: 32px 24px 26px;
+  border: none;
+  border-bottom: 4px double var(--hotel-gold);
+  border-radius: 0;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  background: rgba(183, 154, 99, 0.5);
+  pointer-events: none;
+}
+
+header h1,
+.header h1 {
+  color: var(--hotel-gold-light);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 42px;
+  font-weight: 600;
+  letter-spacing: 10px;
+  margin: 0;
+}
+
+header h1::after {
+  content: 'H O T E L';
+  display: block;
+  font-size: 11px;
+  letter-spacing: 5px;
+  margin-top: 6px;
+  font-weight: 400;
+}
+
+header img,
+.header img {
+  max-height: 65px;
+  object-fit: contain;
+}
+
+/* ==========================================
+   메뉴 탭
+========================================== */
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  background: var(--hotel-green-dark);
+  padding: 0;
+  border-radius: 0;
+  border-bottom: 1px solid var(--hotel-gold);
+}
+
+.tab {
+  position: relative;
+  min-width: 150px;
+  padding: 17px 30px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #b8b5a8;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  transition: 0.2s;
+  box-shadow: none;
+}
+
+.tab:hover {
+  color: var(--hotel-gold-light);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.tab.active {
+  background: transparent;
+  color: var(--hotel-gold-light);
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: var(--hotel-gold);
+}
+
+/* ==========================================
+   페이지
+========================================== */
+
+.page {
+  padding: 32px 24px;
+}
+
+.page h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: var(--hotel-green);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 3px;
+}
+
+/* ==========================================
+   호텔 게시판 명패
+========================================== */
+
+#memo-page::before {
+  content: 'GUEST NOTICE BOARD';
+  display: block;
+  width: fit-content;
+  margin: 0 auto 8px;
+  padding: 12px 36px;
+  background: linear-gradient(
+    110deg,
+    #b49a66,
+    #e0cda3 45%,
+    #b49a66
+  );
+  color: #443723;
+  border: 3px double #79613c;
+  border-radius: 2px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-align: center;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.15);
+}
+
+#memo-page::after {
+  content: 'NAAM HOTEL · GUEST SERVICES';
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  color: #8b7b60;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+}
+
+/* ==========================================
+   공통 버튼
+========================================== */
+
+button {
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+}
+
+#add-memo-btn,
+#add-sticker-btn,
+#add-item-btn,
+#admin-login-btn,
+#save-memo-btn,
+#login-submit-btn {
+  padding: 11px 22px;
+  background: var(--hotel-green);
+  color: var(--hotel-gold-light);
+  border: 1px solid var(--hotel-gold);
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#add-memo-btn:hover,
+#add-sticker-btn:hover,
+#add-item-btn:hover,
+#admin-login-btn:hover,
+#save-memo-btn:hover,
+#login-submit-btn:hover {
+  background: #355447;
+}
+
+#add-memo-btn,
+#add-sticker-btn {
+  margin-top: 14px;
+  margin-bottom: 16px;
+}
+
+/* ==========================================
+   월넛 프레임 게시판
+========================================== */
+
+#memo-board {
+  position: relative;
+  isolation: isolate;
+
+  min-height: 620px;
+
+  background-color: #b7a487;
+
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.16' filter='url(%23n)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.04) 0px,
+      rgba(255,255,255,0.04) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+
+  border: 12px solid #49372b;
+  outline: 2px solid #aa8b55;
+
+  border-radius: 3px;
+
+  box-shadow:
+    inset 0 0 0 2px #9b7c49,
+    inset 0 0 22px rgba(0, 0, 0, 0.2),
+    0 7px 0 #30241c,
+    0 15px 25px rgba(60, 40, 20, 0.18);
+
+  overflow: hidden;
+}
+
+/* ==========================================
+   호텔 메모지
+========================================== */
+
+.memo {
+  position: absolute;
+  isolation: isolate;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 24px 16px 12px;
+
+  border: 1px solid rgba(80, 60, 40, 0.09);
+  border-radius: 1px 1px 3px 1px;
+
+  box-shadow:
+    2px 4px 6px rgba(50, 35, 20, 0.18),
+    5px 9px 15px rgba(50, 35, 20, 0.08);
+
+  background-image: none;
+  transition: box-shadow 0.2s;
+}
+
+/* 황동 압정 */
+
+.memo::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: calc(50% - 5px);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle at 35% 25%,
+    #f4e4b6,
+    #b39658 55%,
+    #72532d
+  );
+
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.memo::after {
+  display: none;
+}
+
+.memo:hover {
+  box-shadow:
+    2px 4px 6px rgba(50, 35, 20, 0.2),
+    5px 9px 15px rgba(50, 35, 20, 0.1);
+}
+
+/* 앤티크 파스텔 메모지 */
+
+.memo.yellow {
+  background: #f4e7b6;
+}
+
+.memo.pink {
+  background: #ead2cd;
+}
+
+.memo.blue {
+  background: #d3e0e5;
+}
+
+.memo.green {
+  background: #d9e1c7;
+}
+
+.memo.purple {
+  background: #ded5e5;
+}
+
+.memo.orange {
+  background: #ead1b6;
+}
+
+/* ==========================================
+   메모 내용
+========================================== */
+
+.memo p {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+
+  color: #484238;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.8;
+
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow-y: auto;
+}
+
+.memo-date {
+  flex-shrink: 0;
+  margin-top: 8px;
+  padding-top: 7px;
+
+  border-top: 1px solid rgba(70, 55, 40, 0.12);
+
+  font-size: 10px;
+  font-weight: 400;
+  color: #8c7c69;
+  text-align: left;
+  opacity: 1;
+}
+
+.memo-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.memo-actions button {
+  padding: 3px 7px;
+  border: none;
+  border-radius: 2px;
+  background: transparent;
+  color: #8a7863;
+  font-size: 10px;
+  box-shadow: none;
+}
+
+.memo-actions button:hover {
+  background: rgba(70, 55, 40, 0.08);
+  color: #49372b;
+}
+
+/* ==========================================
+   이모지 스티커
+========================================== */
+
+.sticker {
+  position: absolute;
+  isolation: isolate;
+  cursor: grab;
+
+  filter: drop-shadow(
+    2px 3px 2px rgba(50, 35, 20, 0.18)
+  );
+}
+
+.sticker:active {
+  cursor: grabbing;
+}
+
+.sticker-controls {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: none;
+  gap: 2px;
+  padding: 3px;
+
+  background: var(--hotel-green);
+  border: 1px solid var(--hotel-gold);
+  border-radius: 3px;
+}
+
+.sticker:hover .sticker-controls {
+  display: flex;
+}
+
+.sticker-controls button {
+  width: 23px;
+  height: 23px;
+  padding: 0;
+
+  background: transparent;
+  color: var(--hotel-gold-light);
+
+  border: none;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.sticker-controls button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================
+   호텔 이벤트 추첨기
+========================================== */
+
+#random-page {
+  position: relative;
+}
+
+#random-page::before {
+  content: 'DAILY LUCKY DRAW';
+  display: block;
+
+  margin: 0 auto 25px;
+
+  text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 5px;
+
+  color: var(--hotel-green);
+}
+
+/* 추첨기 결과창 */
+
+#draw-result {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 540px;
+  min-height: 180px;
+
+  margin: 35px auto 20px;
+  padding: 40px 24px;
+
+  background: radial-gradient(
+    ellipse at center,
+    #243b31,
+    #10251d
+  );
+
+  border: 8px solid #ad925f;
+  outline: 2px solid #69512e;
+  border-radius: 5px;
+
+  color: #f1dfad;
+  text-align: center;
+
+  box-shadow:
+    inset 0 0 0 2px #d6bd86,
+    inset 0 0 25px rgba(0, 0, 0, 0.5),
+    0 6px 0 #77603d,
+    0 12px 20px rgba(0, 0, 0, 0.2);
+}
+
+#draw-result::before {
+  content: '✦  NAAM HOTEL  ✦';
+
+  position: absolute;
+  top: 14px;
+  left: 0;
+  right: 0;
+
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: #bfa875;
+}
+
+#draw-result::after {
+  content: 'YOUR DAILY COMPLIMENTARY GIFT';
+
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  right: 0;
+
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #bfa875;
+}
+
+#draw-result span {
+  color: #f1dfad;
+  font-size: 30px;
+  font-weight: 500;
+  text-shadow: 0 0 14px rgba(223, 201, 155, 0.2);
+}
+
+/* ==========================================
+   물리적인 추첨 버튼
+========================================== */
+
+#draw-btn {
+  display: block;
+
+  width: 220px;
+  min-height: 54px;
+
+  margin: 28px auto 18px;
+  padding: 15px 24px;
+
+  background: linear-gradient(
+    180deg,
+    #d8bd84,
+    #b09258
+  );
+
+  border: 1px solid #8a6b39;
+  border-radius: 5px;
+
+  color: #3f3424;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 2px;
+
+  box-shadow:
+    inset 0 1px 1px #f4e2b5,
+    0 5px 0 #796039,
+    0 8px 12px rgba(0, 0, 0, 0.18);
+
+  transition: 0.15s;
+}
+
+#draw-btn:hover {
+  background: linear-gradient(
+    180deg,
+    #e4cd9c,
+    #bda06a
+  );
+}
+
+#draw-btn:active {
+  transform: translateY(4px);
+
+  box-shadow:
+    inset 0 1px 1px #f4e2b5,
+    0 1px 0 #796039;
+}
+
+#draw-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+#draw-description,
+#draw-status {
+  text-align: center;
+  color: #7d715d;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* ==========================================
+   추첨 기록 — 호텔 장부
+========================================== */
+
+#draw-history {
+  padding: 12px 20px;
+
+  background: #f9f5ec;
+
+  border: 1px solid #c5b48f;
+  border-top: 4px double #b79a63;
+  border-bottom: 4px double #b79a63;
+  border-radius: 0;
+
+  box-shadow: 0 4px 12px rgba(70, 50, 30, 0.06);
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 15px;
+  padding: 13px 5px;
+
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #ded5c4;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-item strong {
+  color: var(--hotel-green);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.history-item span {
+  color: #958771;
+  font-size: 11px;
+}
+
+/* ==========================================
+   관리자 영역
+========================================== */
+
+#admin-controls {
+  padding: 20px;
+  background: #f5f0e5;
+  border: 1px solid #c5b48f;
+  border-radius: 3px;
+}
+
+.item-tag {
+  background: #f3ede1;
+  color: #625642;
+  border: 1px solid #d4c7af;
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+#clear-history-btn {
+  padding: 8px 14px;
+  background: #794b42;
+  color: #f5e9d8;
+  border: 1px solid #a37b65;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+/* ==========================================
+   메모 및 로그인 팝업
+========================================== */
+
+.modal {
+  background: rgba(20, 30, 24, 0.65);
+  backdrop-filter: blur(3px);
+}
+
+.modal-content,
+.modal-box {
+  background: #f7f2e7;
+  border: 4px double #b79a63;
+  border-radius: 3px;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.modal h2,
+.modal h3 {
+  color: var(--hotel-green);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: 2px;
+}
+
+/* ==========================================
+   입력창
+========================================== */
+
+input,
+textarea,
+#memo-content {
+  background: #fffcf5;
+  color: #493e30;
+
+  border: 1px solid #cfc1a5;
+  border-radius: 2px;
+
+  padding: 12px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+
+  outline: none;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--hotel-gold);
+  box-shadow: 0 0 0 2px rgba(183, 154, 99, 0.12);
+}
+
+#memo-content {
+  min-height: 200px;
+  line-height: 1.8;
+}
+
+.color-option {
+  border-radius: 50%;
+  border: 1px solid rgba(70, 55, 40, 0.15);
+}
+
+.color-option.selected {
+  outline: 2px solid var(--hotel-gold);
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   스티커 선택창
+========================================== */
+
+#emoji-picker {
+  background: #f8f3e8;
+  border: 3px double #b79a63;
+  border-radius: 3px;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.emoji-choice {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+.emoji-choice:hover {
+  background: #e9dfcb;
+  border-color: #cbb995;
+}
+
+/* ==========================================
+   스크롤바
+========================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b8a689;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ==========================================
+   모바일
+========================================== */
+
+@media (max-width: 600px) {
+
+  header,
+  .header {
+    padding: 22px 12px;
+  }
+
+  header h1,
+  .header h1 {
+    font-size: 32px;
+    letter-spacing: 7px;
+  }
+
+  .tab {
+    flex: 1;
+    min-width: 0;
+    padding: 15px 12px;
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+
+  .page {
+    padding: 24px 12px;
+  }
+
+  #memo-page::before {
+    padding: 10px 16px;
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+
+  #memo-board {
+    min-height: 600px;
+    border-width: 7px;
+  }
+
+  #random-page::before {
+    font-size: 24px;
+    letter-spacing: 3px;
+  }
+
+  #draw-result {
+    min-height: 160px;
+    border-width: 5px;
+  }
+
+  #draw-result span {
+    font-size: 23px;
+  }
+
+  #draw-result::after {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+
+  .history-item span {
+    font-size: 9px;
+  }
+
+}

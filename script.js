@@ -654,8 +654,27 @@ document.getElementById('save-memo-btn')
 
       } else {
 
-        const boardWidth = memoBoard.clientWidth;
-        const offset = memos.length * 25;
+      } else {
+
+  const position = getBoardCenterPosition(
+    220,
+    185
+  );
+
+  success = await createBoardObject('memo', {
+
+    content,
+    color: selectedColor,
+
+    x: position.x,
+    y: position.y,
+
+    width: 220,
+    height: 185
+
+  });
+
+}
 
         success = await createBoardObject('memo', {
 
@@ -786,8 +805,8 @@ function setupMemoDrag(card, memo) {
 
     if (!dragging) return;
 
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
+const dx = (e.clientX - startX) / boardScale;
+const dy = (e.clientY - startY) / boardScale;
 
     const maxX = Math.max(
       0,
@@ -1767,21 +1786,25 @@ emojiSearch.addEventListener('input', () => {
 
 async function addSticker(emoji) {
 
+  const position = getBoardCenterPosition(
+    48,
+    48
+  );
+
   return await createBoardObject('sticker', {
 
     emoji,
 
-    x: 80 + Math.random() * 100,
-
-    y: 80 + Math.random() * 100,
+    x: position.x,
+    y: position.y,
 
     size: 48,
 
     rotation: 0
 
   });
-}
 
+}
 
 /* ==========================================
    스티커 표시
@@ -1891,7 +1914,7 @@ function setupStickerDrag(el, sticker) {
       0,
       Math.min(
         maxX,
-        originalX + e.clientX - startX
+       originalX + (e.clientX - startX) / boardScale
       )
     );
 
@@ -1899,7 +1922,7 @@ function setupStickerDrag(el, sticker) {
       0,
       Math.min(
         maxY,
-        originalY + e.clientY - startY
+originalY + (e.clientY - startY) / boardScale
       )
     );
 
@@ -2082,5 +2105,516 @@ async function initializeSite() {
 initializeSite().catch(error => {
 
   console.error('사이트 초기화 오류:', error);
+
+});
+/* ==========================================
+   게시판 캔버스 확대 및 이동
+========================================== */
+
+const BOARD_WIDTH = 2400;
+const BOARD_HEIGHT = 1600;
+
+const MIN_BOARD_SCALE = 0.15;
+const MAX_BOARD_SCALE = 2.5;
+
+const boardViewport =
+  document.getElementById('board-viewport');
+
+let boardScale = 1;
+
+let boardPanX = 0;
+let boardPanY = 0;
+
+let boardPointers = new Map();
+
+let boardGesture = null;
+
+
+/* ==========================================
+   화면 변환 적용
+========================================== */
+
+function applyBoardTransform() {
+
+  memoBoard.style.setProperty(
+    'position',
+    'absolute',
+    'important'
+  );
+
+  memoBoard.style.transform =
+    `translate(${boardPanX}px, ${boardPanY}px)
+     scale(${boardScale})`;
+
+  document.getElementById(
+    'board-zoom-level'
+  ).textContent =
+    Math.round(boardScale * 100) + '%';
+
+}
+
+
+/* ==========================================
+   확대 범위 제한
+========================================== */
+
+function clampBoardScale(value) {
+
+  return Math.max(
+    MIN_BOARD_SCALE,
+    Math.min(MAX_BOARD_SCALE, value)
+  );
+
+}
+
+
+/* ==========================================
+   특정 지점을 기준으로 확대
+========================================== */
+
+function zoomBoardAt(
+  newScale,
+  screenX,
+  screenY
+) {
+
+  newScale = clampBoardScale(newScale);
+
+  const worldX =
+    (screenX - boardPanX) / boardScale;
+
+  const worldY =
+    (screenY - boardPanY) / boardScale;
+
+  boardScale = newScale;
+
+  boardPanX =
+    screenX - worldX * boardScale;
+
+  boardPanY =
+    screenY - worldY * boardScale;
+
+  applyBoardTransform();
+
+}
+
+
+/* ==========================================
+   전체 게시판 보기
+========================================== */
+
+function resetBoardView() {
+
+  const width = boardViewport.clientWidth;
+  const height = boardViewport.clientHeight;
+
+  if (!width || !height) return;
+
+  boardScale = clampBoardScale(
+    Math.min(
+      width / BOARD_WIDTH,
+      height / BOARD_HEIGHT
+    ) * 0.96
+  );
+
+  boardPanX =
+    (width - BOARD_WIDTH * boardScale) / 2;
+
+  boardPanY =
+    (height - BOARD_HEIGHT * boardScale) / 2;
+
+  applyBoardTransform();
+
+}
+
+
+/* ==========================================
+   화면 중앙 기준 확대 및 축소
+========================================== */
+
+function zoomBoardCenter(multiplier) {
+
+  zoomBoardAt(
+    boardScale * multiplier,
+    boardViewport.clientWidth / 2,
+    boardViewport.clientHeight / 2
+  );
+
+}
+
+document.getElementById('board-zoom-in')
+  .addEventListener('click', () => {
+
+    zoomBoardCenter(1.25);
+
+  });
+
+document.getElementById('board-zoom-out')
+  .addEventListener('click', () => {
+
+    zoomBoardCenter(0.8);
+
+  });
+
+document.getElementById('board-reset')
+  .addEventListener('click', resetBoardView);
+
+
+/* ==========================================
+   PC 마우스 휠 확대 및 축소
+========================================== */
+
+boardViewport.addEventListener(
+  'wheel',
+  e => {
+
+    e.preventDefault();
+
+    const rect =
+      boardViewport.getBoundingClientRect();
+
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const factor =
+      Math.exp(-e.deltaY * 0.0015);
+
+    zoomBoardAt(
+      boardScale * factor,
+      x,
+      y
+    );
+
+  },
+  { passive: false }
+);
+
+
+/* ==========================================
+   포인터 좌표 계산
+========================================== */
+
+function getBoardPoint(e) {
+
+  const rect =
+    boardViewport.getBoundingClientRect();
+
+  return {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top
+  };
+
+}
+
+function getPointerDistance(a, b) {
+
+  return Math.hypot(
+    b.x - a.x,
+    b.y - a.y
+  );
+
+}
+
+function getPointerCenter(a, b) {
+
+  return {
+    x: (a.x + b.x) / 2,
+    y: (a.y + b.y) / 2
+  };
+
+}
+
+
+/* ==========================================
+   화면 이동 시작
+========================================== */
+
+boardViewport.addEventListener(
+  'pointerdown',
+  e => {
+
+    if (e.button !== 0) return;
+
+    const object = e.target.closest(
+      '.memo, .sticker'
+    );
+
+    const point = getBoardPoint(e);
+
+    /*
+      본인 메모 및 스티커의 기존 조작 기능 유지
+    */
+
+    if (object) {
+
+      const item = [
+        ...memos,
+        ...stickers
+      ].find(
+        item => String(item.id) === object.dataset.id
+      );
+
+      if (
+        item &&
+        canEditObject(item) &&
+        boardPointers.size === 0
+      ) {
+        return;
+      }
+
+    }
+
+    boardPointers.set(
+      e.pointerId,
+      point
+    );
+
+    boardViewport.setPointerCapture(
+      e.pointerId
+    );
+
+    boardViewport.classList.add(
+      'is-panning'
+    );
+
+    if (boardPointers.size === 1) {
+
+      boardGesture = {
+
+        type: 'pan',
+
+        startX: point.x,
+        startY: point.y,
+
+        originalX: boardPanX,
+        originalY: boardPanY
+
+      };
+
+    }
+
+    if (boardPointers.size === 2) {
+
+      const [a, b] =
+        [...boardPointers.values()];
+
+      const center =
+        getPointerCenter(a, b);
+
+      boardGesture = {
+
+        type: 'pinch',
+
+        distance: Math.max(
+          1,
+          getPointerDistance(a, b)
+        ),
+
+        scale: boardScale,
+
+        worldX:
+          (center.x - boardPanX) / boardScale,
+
+        worldY:
+          (center.y - boardPanY) / boardScale
+
+      };
+
+    }
+
+  }
+);
+
+
+/* ==========================================
+   화면 이동 및 모바일 핀치 확대
+========================================== */
+
+boardViewport.addEventListener(
+  'pointermove',
+  e => {
+
+    if (!boardPointers.has(e.pointerId)) {
+      return;
+    }
+
+    const point = getBoardPoint(e);
+
+    boardPointers.set(
+      e.pointerId,
+      point
+    );
+
+    if (!boardGesture) return;
+
+    if (
+      boardPointers.size === 1 &&
+      boardGesture.type === 'pan'
+    ) {
+
+      boardPanX =
+        boardGesture.originalX +
+        point.x -
+        boardGesture.startX;
+
+      boardPanY =
+        boardGesture.originalY +
+        point.y -
+        boardGesture.startY;
+
+      applyBoardTransform();
+
+    }
+
+    if (
+      boardPointers.size >= 2 &&
+      boardGesture.type === 'pinch'
+    ) {
+
+      const [a, b] =
+        [...boardPointers.values()];
+
+      const distance =
+        getPointerDistance(a, b);
+
+      const center =
+        getPointerCenter(a, b);
+
+      boardScale = clampBoardScale(
+        boardGesture.scale *
+        distance /
+        boardGesture.distance
+      );
+
+      boardPanX =
+        center.x -
+        boardGesture.worldX * boardScale;
+
+      boardPanY =
+        center.y -
+        boardGesture.worldY * boardScale;
+
+      applyBoardTransform();
+
+    }
+
+  }
+);
+
+
+/* ==========================================
+   화면 이동 종료
+========================================== */
+
+function stopBoardGesture(e) {
+
+  if (!boardPointers.has(e.pointerId)) {
+    return;
+  }
+
+  boardPointers.delete(e.pointerId);
+
+  if (boardPointers.size === 0) {
+
+    boardGesture = null;
+
+    boardViewport.classList.remove(
+      'is-panning'
+    );
+
+    return;
+
+  }
+
+  if (boardPointers.size === 1) {
+
+    const [point] =
+      [...boardPointers.values()];
+
+    boardGesture = {
+
+      type: 'pan',
+
+      startX: point.x,
+      startY: point.y,
+
+      originalX: boardPanX,
+      originalY: boardPanY
+
+    };
+
+  }
+
+}
+
+boardViewport.addEventListener(
+  'pointerup',
+  stopBoardGesture
+);
+
+boardViewport.addEventListener(
+  'pointercancel',
+  stopBoardGesture
+);
+
+boardViewport.addEventListener(
+  'lostpointercapture',
+  stopBoardGesture
+);
+
+
+/* ==========================================
+   현재 화면 중앙의 실제 게시판 좌표
+========================================== */
+
+function getBoardCenterPosition(
+  objectWidth = 220,
+  objectHeight = 185
+) {
+
+  const x =
+    (
+      boardViewport.clientWidth / 2 -
+      boardPanX
+    ) / boardScale -
+    objectWidth / 2;
+
+  const y =
+    (
+      boardViewport.clientHeight / 2 -
+      boardPanY
+    ) / boardScale -
+    objectHeight / 2;
+
+  return {
+
+    x: Math.max(
+      0,
+      Math.min(
+        BOARD_WIDTH - objectWidth,
+        x
+      )
+    ),
+
+    y: Math.max(
+      0,
+      Math.min(
+        BOARD_HEIGHT - objectHeight,
+        y
+      )
+    )
+
+  };
+
+}
+
+
+/* ==========================================
+   최초 게시판 화면 설정
+========================================== */
+
+requestAnimationFrame(() => {
+
+  resetBoardView();
 
 });
